@@ -1,0 +1,8 @@
+graphql:
+  playground:
+    settings:
+      schema:
+        polling:
+          interval: 60000
+          enable: false
+
