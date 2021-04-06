@@ -1,12 +1,11 @@
 package de.sonallux.spotify.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sonallux.spotify.core.SpotifyWebApiUtils;
 import de.sonallux.spotify.core.model.SpotifyWebApi;
 import de.sonallux.spotify.graphql.schema.SchemaCreator;
+import de.sonallux.spotify.graphql.schema.SpotifyDataLoaderRegistryFactory;
 import graphql.schema.GraphQLSchema;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.OkHttpClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +32,12 @@ public class SpotifyGraphQLServerApplication {
 
     @Bean
     HttpClient createRestClient() {
-	    return new HttpClient(new OkHttpClient.Builder().build(), new ObjectMapper());
+	    return new HttpClient();
+    }
+
+    @Bean
+    SpotifyDataLoaderRegistryFactory createSpotifyDataLoaderBuilder(HttpClient httpClient) {
+	    return new SpotifyDataLoaderRegistryFactory(httpClient);
     }
 
     @Bean

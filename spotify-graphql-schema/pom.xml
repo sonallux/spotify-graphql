@@ -11,39 +11,23 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>spotify-graphql-server</artifactId>
+    <artifactId>spotify-graphql-schema</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>spotify-graphql-server</name>
-    <description>A GraphQL server for Spotify using Spring Boot</description>
+    <name>spotify-graphql-schema</name>
+    <description>A GraphQL schema for Spotify</description>
     <url>https://github.com/sonallux/spotify-graphql</url>
 
     <dependencies>
-        <dependency>
-            <groupId>de.sonallux.spotify</groupId>
-            <artifactId>spotify-graphql-schema</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
         <dependency>
             <groupId>de.sonallux.spotify</groupId>
             <artifactId>spotify-web-api-core</artifactId>
             <version>${spotify-web-api-core.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.graphql-java-kickstart</groupId>
-            <artifactId>graphql-spring-boot-starter</artifactId>
-            <version>${graphql-java-kickstart.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.graphql-java-kickstart</groupId>
-            <artifactId>playground-spring-boot-starter</artifactId>
-            <version>${graphql-java-kickstart.version}</version>
-            <scope>runtime</scope>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphql-java</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -58,15 +42,19 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

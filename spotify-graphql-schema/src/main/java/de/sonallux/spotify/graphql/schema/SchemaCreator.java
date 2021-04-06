@@ -2,7 +2,6 @@ package de.sonallux.spotify.graphql.schema;
 
 import de.sonallux.spotify.core.model.SpotifyWebApi;
 import graphql.schema.*;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.stream.Collectors;
 
 import static graphql.Scalars.GraphQLString;
 
-@Slf4j
 public class SchemaCreator {
 
     public static final List<String> BASE_TYPES = List.of("album", "artist", "episode", "playlist", "show", "track");

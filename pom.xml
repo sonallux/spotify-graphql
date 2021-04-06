@@ -14,7 +14,7 @@
     <url>https://github.com/sonallux/spotify-graphql</url>
 
     <modules>
-        <!--<module>spotify-graphql-schema</module>-->
+        <module>spotify-graphql-schema</module>
         <module>spotify-graphql-server</module>
     </modules>
 
@@ -61,12 +61,44 @@
 
         <!-- Dependencies -->
         <spotify-web-api-core.version>2021.4.5</spotify-web-api-core.version>
-        <guava.version>30.1.1-jre</guava.version>
         <okhttp.version>4.9.1</okhttp.version>
+        <guava.version>30.1.1-jre</guava.version>
+        <spring-boot.version>2.4.4</spring-boot.version>
+        <graphql-java-kickstart.version>11.0.0</graphql-java-kickstart.version>
         <lombok.version>1.18.18</lombok.version>
+        <graphql-java.version>16.2</graphql-java.version>
 
         <!-- Test Dependencies -->
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.graphql-java</groupId>
+                <artifactId>graphql-java</artifactId>
+                <version>${graphql-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp-bom</artifactId>
+                <version>${okhttp.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <distributionManagement>
         <snapshotRepository>

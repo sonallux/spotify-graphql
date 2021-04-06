@@ -14,6 +14,10 @@ public class HttpClient {
     private final OkHttpClient httpClient;
     private final ObjectMapper objectMapper;
 
+    public HttpClient() {
+        this(new OkHttpClient(), new ObjectMapper());
+    }
+
     public <T> T request(Request request, TypeReference<T> type) throws IOException {
         try (var response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
