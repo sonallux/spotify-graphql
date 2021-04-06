@@ -6,17 +6,24 @@ import de.sonallux.spotify.graphql.schema.SpotifyDataLoaderRegistryFactory;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
+import graphql.schema.GraphQLSchema;
+import graphql.schema.idl.SchemaPrinter;
 
 import java.io.IOException;
 
 public class SpotifyGraphQL {
     private final SpotifyDataLoaderRegistryFactory spotifyDataLoaderRegistryFactory;
+    private final GraphQLSchema spotifyGraphQLSchema;
     private final GraphQL spotifyGraphQL;
 
     public SpotifyGraphQL() throws IOException {
-        var schema = new SchemaCreator().generate(SpotifyWebApiUtils.load());
-        spotifyGraphQL = GraphQL.newGraphQL(schema).build();
+        spotifyGraphQLSchema = new SchemaCreator().generate(SpotifyWebApiUtils.load());
+        spotifyGraphQL = GraphQL.newGraphQL(spotifyGraphQLSchema).build();
         spotifyDataLoaderRegistryFactory = new SpotifyDataLoaderRegistryFactory(new HttpClient());
+    }
+
+    public String printSchema() {
+        return new SchemaPrinter().print(spotifyGraphQLSchema);
     }
 
     public ExecutionResult execute(String query, String authorizationHeader) {

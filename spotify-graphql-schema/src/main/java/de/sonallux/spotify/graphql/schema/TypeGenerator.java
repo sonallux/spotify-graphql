@@ -24,49 +24,33 @@ class TypeGenerator {
 
     private Queue<String> queue; // SpotifyObject name
     private SortedMap<String, GraphQLType> graphQLTypes; // Spotify type -> GraphQLType
-    private GraphQLObjectType graphQLPagingObject;
-    private GraphQLObjectType graphQLCursorPagingObject;
+    private SpotifyWebApiObject spotifyPagingObject;
+    private SpotifyWebApiObject spotifyCursorPagingObject;
 
     Collection<GraphQLType> generate() {
         this.queue = new LinkedList<>(BASE_SPOTIFY_TYPES);
         this.graphQLTypes = new TreeMap<>();
 
-        this.graphQLPagingObject = initPagingObjects(spotifyWebApi.getObject("PagingObject").get());
-        this.graphQLCursorPagingObject = initPagingObjects(spotifyWebApi.getObject("CursorPagingObject").get());
+        this.spotifyPagingObject = spotifyWebApi.getObject("PagingObject").orElseThrow();
+        this.spotifyCursorPagingObject = spotifyWebApi.getObject("CursorPagingObject").orElseThrow();
 
-        this.iterate(spotifyWebApi.getObjects());
+        this.iterate();
 
         return graphQLTypes.values();
     }
 
-    private GraphQLObjectType initPagingObjects(SpotifyWebApiObject spotifyObject) {
-        var itemsProperty = spotifyObject.getProperties().stream()
-            .filter(p -> "items".equals(p.getName()))
-            .findFirst().get();
-
-        // Default type is Array[Object] which can not be mapped currently, therefore replace with String
-        var defaultItemType = itemsProperty.getType();
-        itemsProperty.setType("Array[String]");
-
-        var graphQLObject = generateObject(spotifyObject);
-
-        itemsProperty.setType(defaultItemType);
-
-        return graphQLObject;
-    }
-
-    private void iterate(SortedMap<String, SpotifyWebApiObject> spotifyObjects) {
+    private void iterate() {
         while (!queue.isEmpty()) {
             var currentObject = queue.poll();
             if (graphQLTypes.containsKey(currentObject)) {
                 continue;
             }
 
-            var spotifyObject = spotifyObjects.get(currentObject);
+            var spotifyObject = spotifyWebApi.getObject(currentObject).orElseThrow();
             var graphQLObject = generateObject(spotifyObject);
 
             if (graphQLObject.getFieldDefinitions().size() == 0) {
-                System.out.println(currentObject + " has zero properties");
+                log.warn(currentObject + " has zero properties");
             }
 
             this.graphQLTypes.put(currentObject, graphQLObject);
@@ -142,9 +126,9 @@ class TypeGenerator {
             var itemType = toGraphQLType(matcher.group(1));
             return GraphQLList.list(itemType);
         } else if ((matcher = SpotifyWebApiUtils.PAGING_OBJECT_TYPE_PATTERN.matcher(type)).matches()) {
-            return newPagingObject(graphQLPagingObject, matcher.group(1));
+            return newPagingObject(spotifyPagingObject, matcher.group(1));
         } else if ((matcher = SpotifyWebApiUtils.CURSOR_PAGING_OBJECT_TYPE_PATTERN.matcher(type)).matches()) {
-            return newPagingObject(graphQLCursorPagingObject, matcher.group(1));
+            return newPagingObject(spotifyCursorPagingObject, matcher.group(1));
         } else if (type.contains(" | ")) {
             return generateUnion(type);
         } else {
@@ -174,16 +158,23 @@ class TypeGenerator {
         return GraphQLTypeReference.typeRef(graphQLUnionType.getName());
     }
 
-    private GraphQLTypeReference newPagingObject(GraphQLObjectType baseGraphQLPagingObject, String itemType) {
-        var graphQLObject = (GraphQLObjectType)graphQLTypes.computeIfAbsent(baseGraphQLPagingObject.getName() + "Object[" + itemType + "]", s -> {
-            var graphQLItemType = toGraphQLType(itemType);
-            var newItemsFieldDef = GraphQLFieldDefinition
-                .newFieldDefinition(baseGraphQLPagingObject.getFieldDefinition("items"))
-                .type(GraphQLList.list(graphQLItemType));
+    private GraphQLTypeReference newPagingObject(SpotifyWebApiObject baseSpotifyPagingObject, String itemType) {
+        var key = baseSpotifyPagingObject.getName() + "Object[" + itemType + "]";
+        var graphQLObject = (GraphQLObjectType)graphQLTypes.computeIfAbsent(key, s -> {
+            var itemsProperty = baseSpotifyPagingObject.getProperties().stream()
+                .filter(p -> "items".equals(p.getName()))
+                .findFirst().orElseThrow();
 
-            return GraphQLObjectType.newObject(baseGraphQLPagingObject)
-                .name(baseGraphQLPagingObject.getName() + toGraphQLName(itemType))
-                .field(newItemsFieldDef)
+            // Default type is Array[Object], replace with actual itemType, generate GraphQLType and then revert itemType change
+            var defaultItemType = itemsProperty.getType();
+            itemsProperty.setType("Array[" + itemType + "]");
+
+            var graphQLPagingObject = generateObject(baseSpotifyPagingObject);
+
+            itemsProperty.setType(defaultItemType);
+
+            return GraphQLObjectType.newObject(graphQLPagingObject)
+                .name(graphQLPagingObject.getName() + toGraphQLName(itemType))
                 .build();
         });
 
