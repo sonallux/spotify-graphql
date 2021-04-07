@@ -200,7 +200,7 @@ type LinkedTrack {
   uri: String
 }
 
-"[PagingObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+"[PagingAlbumObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
 type PagingAlbum {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
@@ -218,7 +218,7 @@ type PagingAlbum {
   total: Int
 }
 
-"[PagingObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+"[PagingEpisodeObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
 type PagingEpisode {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
@@ -236,7 +236,7 @@ type PagingEpisode {
   total: Int
 }
 
-"[PagingObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+"[PagingPlaylistTrackObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
 type PagingPlaylistTrack {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
@@ -254,7 +254,7 @@ type PagingPlaylistTrack {
   total: Int
 }
 
-"[PagingObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+"[PagingTrackObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
 type PagingTrack {
   "A link to the Web API endpoint returning the full result of the request"
   href: String

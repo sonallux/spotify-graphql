@@ -1,6 +1,7 @@
 package de.sonallux.spotify.graphql.schema;
 
 import de.sonallux.spotify.core.model.SpotifyWebApi;
+import de.sonallux.spotify.graphql.SpotifyWebApiAdjuster;
 import graphql.schema.*;
 
 import java.util.Collection;
@@ -11,13 +12,17 @@ import java.util.stream.Collectors;
 import static graphql.Scalars.GraphQLString;
 
 public class SchemaCreator {
-
+    private static final List<String> BASE_SPOTIFY_TYPES = List.of("AlbumObject", "ArtistObject", "EpisodeObject", "PlaylistObject", "PlaylistTrackObject", "TrackObject", "ShowObject");
     public static final List<String> BASE_TYPES = List.of("album", "artist", "episode", "playlist", "show", "track");
 
     public GraphQLSchema generate(SpotifyWebApi spotifyWebApi) {
+        SpotifyWebApiAdjuster.adjust(spotifyWebApi);
+
         var schemaBuilder = GraphQLSchema.newSchema();
 
-        var graphQLTypes = new TypeGenerator(spotifyWebApi).generate();
+        var typeGenerator = new TypeGenerator(spotifyWebApi);
+        BASE_SPOTIFY_TYPES.forEach(typeGenerator::getType);
+        var graphQLTypes = typeGenerator.getAllTypes();
         graphQLTypes.forEach(schemaBuilder::additionalType);
 
         var codeRegistryBuilder = GraphQLCodeRegistry.newCodeRegistry();

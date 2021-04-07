@@ -20,7 +20,7 @@ import static graphql.Scalars.*;
 public class AdditionalFields {
     public static final List<AdditionalField> ADDITIONAL_FIELDS = List.of(
         new AdditionalField("AlbumObject", "tracks", "category-albums", "endpoint-get-an-albums-tracks", PagingDataFetcher.factory("albumsTracksLoader")),
-        new AdditionalField("ArtistObject", "albums", "category-artists", "endpoint-get-an-artists-albums", PagingDataFetcher.factory("artistsAlbumsLoader"), new SpotifyWebApiObject.Property("albums", "PagingObject[AlbumObject]")),
+        new AdditionalField("ArtistObject", "albums", "category-artists", "endpoint-get-an-artists-albums", PagingDataFetcher.factory("artistsAlbumsLoader"), new SpotifyWebApiObject.Property("albums", "PagingAlbumObject")),
         new AdditionalField("ArtistObject", "related_artists", "category-artists", "endpoint-get-an-artists-related-artists", DelegateToLoaderDataFetcher.factory("artistsRelatedArtistsLoader"), new SpotifyWebApiObject.Property("related_artists", "Array[ArtistObject]")),
         new AdditionalField("ArtistObject", "top_tracks", "category-artists", "endpoint-get-an-artists-top-tracks", DelegateToLoaderDataFetcher.factory("artistsTopTracksLoader"), new SpotifyWebApiObject.Property("top_tracks", "Array[TrackObject]")),
         new AdditionalField("PlaylistObject", "tracks", "category-playlists", "endpoint-get-playlists-tracks", PagingDataFetcher.factory("playlistsTracksLoader")),
