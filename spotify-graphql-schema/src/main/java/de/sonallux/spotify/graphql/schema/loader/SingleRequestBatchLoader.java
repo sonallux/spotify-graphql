@@ -12,23 +12,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
-abstract class SingleRequestBatchLoader<RESPONSE_TYPE, RETURN_TYPE> extends AbstractBatchLoader<String, RETURN_TYPE> {
+abstract class SingleRequestBatchLoader<KEY_TYPE> extends AbstractBatchLoader<KEY_TYPE> {
     private final HttpClient httpClient;
 
-    protected abstract HttpUrl urlFactory(String item);
+    protected abstract HttpUrl urlFactory(KEY_TYPE item, BatchLoaderEnvironment environment);
 
-    protected abstract Try<RETURN_TYPE> responseTransformation(RESPONSE_TYPE response);
+    protected Try<?> responseTransformation(Object response, Object keyContext) {
+        return Try.succeeded(response);
+    }
 
     @Override
-    protected List<Try<RETURN_TYPE>> loadBatch(List<String> list, BatchLoaderEnvironment env) {
-        var responseType = new TypeReference<RESPONSE_TYPE>() {};
+    protected List<Try<?>> loadBatch(List<KEY_TYPE> list, BatchLoaderEnvironment environment) {
+        var responseType = new TypeReference<>() {};
 
-        var result = new ArrayList<Try<RETURN_TYPE>>();
+        var result = new ArrayList<Try<?>>();
         for (var item : list) {
             try {
-                var url = urlFactory(item);
-                var response = httpClient.request(getRequestBuilder(env).url(url).build(), responseType);
-                var object = responseTransformation(response);
+                var url = urlFactory(item, environment);
+                var response = httpClient.request(getRequestBuilder(environment).url(url).build(), responseType);
+                var object = responseTransformation(response, environment.getKeyContexts().get(item));
                 result.add(object);
             } catch (IOException e) {
                 result.add(Try.failed(getGraphQLErrorException(e)));

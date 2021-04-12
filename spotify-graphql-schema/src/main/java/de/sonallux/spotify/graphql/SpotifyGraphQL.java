@@ -1,8 +1,9 @@
 package de.sonallux.spotify.graphql;
 
 import de.sonallux.spotify.core.SpotifyWebApiUtils;
-import de.sonallux.spotify.graphql.schema.SchemaCreator;
+import de.sonallux.spotify.core.model.SpotifyWebApi;
 import de.sonallux.spotify.graphql.schema.SpotifyDataLoaderRegistryFactory;
+import de.sonallux.spotify.graphql.schema.generation.SpotifyGraphQLSchemaGenerator;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
@@ -16,10 +17,14 @@ public class SpotifyGraphQL {
     private final GraphQLSchema spotifyGraphQLSchema;
     private final GraphQL spotifyGraphQL;
 
-    public SpotifyGraphQL() throws IOException {
-        spotifyGraphQLSchema = new SchemaCreator().generate(SpotifyWebApiUtils.load());
+    public SpotifyGraphQL(SpotifyWebApi spotifyWebApi) {
+        spotifyGraphQLSchema = new SpotifyGraphQLSchemaGenerator().generate(spotifyWebApi);
         spotifyGraphQL = GraphQL.newGraphQL(spotifyGraphQLSchema).build();
-        spotifyDataLoaderRegistryFactory = new SpotifyDataLoaderRegistryFactory(new HttpClient());
+        spotifyDataLoaderRegistryFactory = new SpotifyDataLoaderRegistryFactory(new HttpClient(), spotifyWebApi);
+    }
+
+    public SpotifyGraphQL() throws IOException {
+        this(SpotifyWebApiUtils.load());
     }
 
     public String printSchema() {

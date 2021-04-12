@@ -2,8 +2,8 @@ package de.sonallux.spotify.graphql;
 
 import de.sonallux.spotify.core.SpotifyWebApiUtils;
 import de.sonallux.spotify.core.model.SpotifyWebApi;
-import de.sonallux.spotify.graphql.schema.SchemaCreator;
 import de.sonallux.spotify.graphql.schema.SpotifyDataLoaderRegistryFactory;
+import de.sonallux.spotify.graphql.schema.generation.SpotifyGraphQLSchemaGenerator;
 import graphql.schema.GraphQLSchema;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -20,14 +20,9 @@ public class SpotifyGraphQLServerApplication {
 		SpringApplication.run(SpotifyGraphQLServerApplication.class, args);
 	}
 
-    private SpotifyWebApi readApiDocumentation() {
-        try {
-            return SpotifyWebApiUtils.load();
-        } catch (IOException e) {
-            System.err.println("Failed to read web API documentation file: " + e.getMessage());
-            System.exit(1);
-        }
-        return null;
+	@Bean
+    SpotifyWebApi createSpotifyWebApi() throws IOException {
+        return SpotifyWebApiUtils.load();
     }
 
     @Bean
@@ -36,13 +31,12 @@ public class SpotifyGraphQLServerApplication {
     }
 
     @Bean
-    SpotifyDataLoaderRegistryFactory createSpotifyDataLoaderBuilder(HttpClient httpClient) {
-	    return new SpotifyDataLoaderRegistryFactory(httpClient);
+    SpotifyDataLoaderRegistryFactory createSpotifyDataLoaderBuilder(SpotifyWebApi spotifyWebApi, HttpClient httpClient) {
+	    return new SpotifyDataLoaderRegistryFactory(httpClient, spotifyWebApi);
     }
 
     @Bean
-    GraphQLSchema createSchema() {
-	    var apiDocumentation = readApiDocumentation();
-	    return new SchemaCreator().generate(apiDocumentation);
+    GraphQLSchema createSchema(SpotifyWebApi spotifyWebApi) {
+	    return new SpotifyGraphQLSchemaGenerator().generate(spotifyWebApi);
     }
 }

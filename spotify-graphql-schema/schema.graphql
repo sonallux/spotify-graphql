@@ -36,6 +36,8 @@ type Album {
   copyrights: [Copyright]
   "Known external IDs for the album."
   external_ids: ExternalId
+  "Known external URLs for this album."
+  external_urls: ExternalUrl
   "A list of the genres used to classify the album. For example: 'Prog Rock' , 'Post-Grunge'. (If not yet classified, the array is empty.)"
   genres: [String]
   "A link to the Web API endpoint providing full details of the album."
@@ -90,6 +92,8 @@ type Artist {
     "The index of the first album to return. Default: 0 (i.e., the first album). Use with `limit` to get the next set of albums."
     offset: Int
   ): PagingAlbum
+  "Known external URLs for this artist."
+  external_urls: ExternalUrl
   "Information about the followers of the artist."
   followers: Followers
   "A list of the genres the artist is associated with. For example: `'Prog Rock'` , `'Post-Grunge'`. (If not yet classified, the array is empty.)"
@@ -130,6 +134,8 @@ type Episode {
   duration_ms: Int
   "Whether or not the episode has explicit content (true = yes it does; false = no it does not OR unknown)."
   explicit: Boolean
+  "External URLs for this episode."
+  external_urls: ExternalUrl
   "A link to the Web API endpoint providing full details of the episode."
   href: String
   "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the episode."
@@ -170,6 +176,12 @@ type ExternalId {
   upc: String
 }
 
+"[ExternalUrlObject](https://developer.spotify.com/documentation/web-api/reference/#object-externalurlobject)"
+type ExternalUrl {
+  "The [Spotify URL](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the object."
+  spotify: String
+}
+
 "[FollowersObject](https://developer.spotify.com/documentation/web-api/reference/#object-followersobject)"
 type Followers {
   "A link to the Web API endpoint providing full details of the followers; `null` if not available. Please note that this will always be set to null, as the Web API does not support it at the moment."
@@ -190,6 +202,8 @@ type Image {
 
 "[LinkedTrackObject](https://developer.spotify.com/documentation/web-api/reference/#object-linkedtrackobject)"
 type LinkedTrack {
+  "Known external URLs for this track."
+  external_urls: ExternalUrl
   "A link to the Web API endpoint providing full details of the track."
   href: String
   "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the track."
@@ -278,6 +292,8 @@ type Playlist {
   collaborative: Boolean
   "The playlist description. *Only returned for modified, verified playlists, otherwise* `null`."
   description: String
+  "Known external URLs for this playlist."
+  external_urls: ExternalUrl
   "Information about the followers of the playlist."
   followers: Followers
   "A link to the Web API endpoint providing full details of the playlist."
@@ -323,6 +339,8 @@ type PlaylistTrack {
 type PublicUser {
   "The name displayed on the user's profile. `null` if not available."
   display_name: String
+  "Known public external URLs for this user."
+  external_urls: ExternalUrl
   "Information about the followers of this user."
   followers: Followers
   "A link to the Web API endpoint for this user."
@@ -338,12 +356,42 @@ type PublicUser {
 }
 
 type Query {
-  album(id: String, uri: String): Album
-  artist(id: String, uri: String): Artist
-  episode(id: String, uri: String): Episode
-  playlist(id: String, uri: String): Playlist
-  show(id: String, uri: String): Show
-  track(id: String, uri: String): Track
+  album(
+    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
+    id: String, 
+    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
+    uri: String
+  ): Album
+  artist(
+    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
+    id: String, 
+    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
+    uri: String
+  ): Artist
+  episode(
+    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
+    id: String, 
+    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
+    uri: String
+  ): Episode
+  playlist(
+    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
+    id: String, 
+    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
+    uri: String
+  ): Playlist
+  show(
+    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
+    id: String, 
+    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
+    uri: String
+  ): Show
+  track(
+    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
+    id: String, 
+    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
+    uri: String
+  ): Track
 }
 
 "[ResumePointObject](https://developer.spotify.com/documentation/web-api/reference/#object-resumepointobject)"
@@ -371,6 +419,8 @@ type Show {
   ): PagingEpisode
   "Whether or not the show has explicit content (true = yes it does; false = no it does not OR unknown)."
   explicit: Boolean
+  "External URLs for this show."
+  external_urls: ExternalUrl
   "A link to the Web API endpoint providing full details of the show."
   href: String
   "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the show."
@@ -409,6 +459,8 @@ type Track {
   explicit: Boolean
   "Known external IDs for the track."
   external_ids: ExternalId
+  "Known external URLs for this track."
+  external_urls: ExternalUrl
   "A link to the Web API endpoint providing full details of the track."
   href: String
   "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the track."
