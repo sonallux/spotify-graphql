@@ -12,14 +12,21 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 class EndpointMapping {
-    static final List<EndpointMapping> MAPPINGS = List.of(
-        new EndpointMapping("category-albums", "endpoint-get-an-album", "Query", "album"),
-        new EndpointMapping("category-artists", "endpoint-get-an-artist", "Query", "artist"),
-        new EndpointMapping("category-episodes", "endpoint-get-an-episode", "Query", "episode"),
-        new EndpointMapping("category-playlists", "endpoint-get-playlist", "Query", "playlist"),
-        new EndpointMapping("category-shows", "endpoint-get-a-show", "Query", "show"),
-        new EndpointMapping("category-tracks", "endpoint-get-track", "Query", "track"),
+    static final SchemaObject QUERY_SCHEMA_OBJECT = new SchemaObject("Query")
+        .addField(new SchemaField("album", "AlbumObject"))
+        .addField(new SchemaField("albums", "Array[AlbumObject]"))
+        .addField(new SchemaField("artist", "ArtistObject"))
+        .addField(new SchemaField("artists", "Array[ArtistObject]"))
+        .addField(new SchemaField("episode", "EpisodeObject"))
+        .addField(new SchemaField("episodes", "Array[EpisodeObject]"))
+        .addField(new SchemaField("playlist", "PlaylistObject"))
+        .addField(new SchemaField("playlists", "Array[PlaylistObject]"))
+        .addField(new SchemaField("show", "ShowObject"))
+        .addField(new SchemaField("shows", "Array[ShowObject]"))
+        .addField(new SchemaField("track", "TrackObject"))
+        .addField(new SchemaField("tracks", "Array[TrackObject]"));
 
+    static final List<EndpointMapping> MAPPINGS = List.of(
         new EndpointMapping("category-albums", "endpoint-get-an-albums-tracks", "AlbumObject", "tracks"),
         new EndpointMapping("category-artists", "endpoint-get-an-artists-albums", "ArtistObject", "albums"),
         new EndpointMapping("category-artists", "endpoint-get-an-artists-related-artists", "ArtistObject", "related_artists", "artists"),

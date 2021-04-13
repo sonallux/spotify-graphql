@@ -20,8 +20,9 @@ class SchemaObject {
         this(name, null, new TreeMap<>());
     }
 
-    public void addField(SchemaField field) {
+    public SchemaObject addField(SchemaField field) {
         fields.put(field.getName(), field);
+        return this;
     }
 
     public SchemaField getField(String fieldName) {

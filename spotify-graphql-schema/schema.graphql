@@ -362,36 +362,72 @@ type Query {
     "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
     uri: String
   ): Album
+  albums(
+    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
+    ids: [String], 
+    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
+    uris: [String]
+  ): [Album]
   artist(
     "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
     id: String, 
     "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
     uri: String
   ): Artist
+  artists(
+    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
+    ids: [String], 
+    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
+    uris: [String]
+  ): [Artist]
   episode(
     "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
     id: String, 
     "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
     uri: String
   ): Episode
+  episodes(
+    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
+    ids: [String], 
+    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
+    uris: [String]
+  ): [Episode]
   playlist(
     "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
     id: String, 
     "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
     uri: String
   ): Playlist
+  playlists(
+    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
+    ids: [String], 
+    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
+    uris: [String]
+  ): [Playlist]
   show(
     "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
     id: String, 
     "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
     uri: String
   ): Show
+  shows(
+    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
+    ids: [String], 
+    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
+    uris: [String]
+  ): [Show]
   track(
     "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
     id: String, 
     "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
     uri: String
   ): Track
+  tracks(
+    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
+    ids: [String], 
+    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
+    uris: [String]
+  ): [Track]
 }
 
 "[ResumePointObject](https://developer.spotify.com/documentation/web-api/reference/#object-resumepointobject)"

@@ -6,9 +6,10 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
-public class BaseDataFetcher implements DataFetcher<Object> {
+import static graphql.GraphqlErrorException.newErrorException;
 
+@AllArgsConstructor
+public class BaseObjectDataFetcher implements DataFetcher<Object> {
     private final String type;
 
     @Override
@@ -17,23 +18,23 @@ public class BaseDataFetcher implements DataFetcher<Object> {
         String uri = environment.getArgument("uri");
         if (id != null && uri == null) {
             // id present
-            return environment.getDataLoader(type + "Loader").load(id);
+            return environment.<String, Object>getDataLoader(type + "Loader").load(id);
         } else if (id == null && uri != null) {
             // uri present
             if (!type.equals(SpotifyUtil.getTypeFromUri(uri))) {
-                throw GraphqlErrorException.newErrorException()
+                throw newErrorException()
                     .message("Expected a 'uri' of type '" + type + "' but got 'uri' " + uri)
                     .build();
             }
             id = SpotifyUtil.getIdFromUri(uri);
             if (id == null) {
-                throw GraphqlErrorException.newErrorException()
+                throw newErrorException()
                     .message("Missing 'id' in provided 'uri' " + uri)
                     .build();
             }
-            return environment.getDataLoader(type + "Loader").load(id);
+            return environment.<String, Object>getDataLoader(type + "Loader").load(id);
         } else {
-            throw GraphqlErrorException.newErrorException()
+            throw newErrorException()
                 .message("Either an 'id' or 'uri' must be specified")
                 .build();
         }

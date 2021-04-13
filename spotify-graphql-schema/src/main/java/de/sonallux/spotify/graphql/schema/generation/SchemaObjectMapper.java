@@ -20,7 +20,11 @@ class SchemaObjectMapper {
     private final Queue<String> queue = new LinkedList<>(); // SpotifyObject name
 
     Map<String, SchemaObject> generate() {
-        schemaObjectMap.put("Query", new SchemaObject("Query"));
+        var queryObject = EndpointMapping.QUERY_SCHEMA_OBJECT;
+        schemaObjectMap.put("Query", queryObject);
+
+        queryObject.getFields().forEach((name, field) -> addContainedTypes(field.getType()));
+        iterate();
 
         for (var endpointMapping : EndpointMapping.MAPPINGS) {
             addToQueue(endpointMapping.getObjectName());
