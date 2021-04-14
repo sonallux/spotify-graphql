@@ -87,6 +87,15 @@ type AlbumRestriction {
 "[ArtistObject](https://developer.spotify.com/documentation/web-api/reference/#object-artistobject)"
 type Artist {
   albums(
+    """
+    A comma-separated list of keywords that will be used to filter the response. If not supplied, all album types will be returned. Valid values are:  
+    - `album`  
+    - `single`  
+    - `appears_on`  
+    - `compilation`  
+    For example: `include_groups=album,single`.
+    """
+    include_groups: String, 
     "The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50. For example: `limit=2`"
     limit: Int, 
     "The index of the first album to return. Default: 0 (i.e., the first album). Use with `limit` to get the next set of albums."
@@ -114,6 +123,26 @@ type Artist {
   top_tracks: [Track]
   "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the artist."
   uri: String
+}
+
+"[CategoryObject](https://developer.spotify.com/documentation/web-api/reference/#object-categoryobject)"
+type Category {
+  "A link to the Web API endpoint returning full details of the category."
+  href: String
+  "The category icon, in various sizes."
+  icons: [Image]
+  "The [Spotify category ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) of the category."
+  id: String
+  "The name of the category."
+  name: String
+  playlists(
+    "A country: an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). Provide this parameter to ensure that the category exists for a particular country."
+    country: String, 
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int, 
+    "The index of the first item to return. Default: 0 (the first object). Use with `limit` to get the next set of items."
+    offset: Int
+  ): PagingPlaylist
 }
 
 "[CopyrightObject](https://developer.spotify.com/documentation/web-api/reference/#object-copyrightobject)"
@@ -166,6 +195,14 @@ type Episode {
   uri: String
 }
 
+"[ExplicitContentSettingsObject](https://developer.spotify.com/documentation/web-api/reference/#object-explicitcontentsettingsobject)"
+type ExplicitContentSettings {
+  "When `true`, indicates that explicit content should not be played."
+  filter_enabled: Boolean
+  "When `true`, indicates that the explicit content setting is locked and can't be changed by the user."
+  filter_locked: Boolean
+}
+
 "[ExternalIdObject](https://developer.spotify.com/documentation/web-api/reference/#object-externalidobject)"
 type ExternalId {
   "[International Article Number](http://en.wikipedia.org/wiki/International_Article_Number_%28EAN%29)"
@@ -180,6 +217,11 @@ type ExternalId {
 type ExternalUrl {
   "The [Spotify URL](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the object."
   spotify: String
+}
+
+type FeaturedPlaylist {
+  message: String
+  playlists: PagingPlaylist
 }
 
 "[FollowersObject](https://developer.spotify.com/documentation/web-api/reference/#object-followersobject)"
@@ -232,12 +274,48 @@ type PagingAlbum {
   total: Int
 }
 
+"[PagingCategoryObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+type PagingCategory {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested data."
+  items: [Category]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
 "[PagingEpisodeObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
 type PagingEpisode {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."
   items: [Episode]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
+"[PagingPlaylistObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+type PagingPlaylist {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested data."
+  items: [Playlist]
   "The maximum number of items in the response (as set in the query or by default)."
   limit: Int
   "URL to the next page of items. ( `null` if none)"
@@ -335,6 +413,34 @@ type PlaylistTrack {
   track: UnionTrackEpisode
 }
 
+"[PrivateUserObject](https://developer.spotify.com/documentation/web-api/reference/#object-privateuserobject)"
+type PrivateUser {
+  "The country of the user, as set in the user's account profile. An [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). *This field is only available when the current user has granted access to the [user-read-private](https://developer.spotify.com/documentation/general/guides/authorization-guide/#list-of-scopes) scope.*"
+  country: String
+  "The name displayed on the user's profile. `null` if not available."
+  display_name: String
+  "The user's email address, as entered by the user when creating their account. ***Important!** This email address is unverified; there is no proof that it actually belongs to the user.* *This field is only available when the current user has granted access to the [user-read-email](https://developer.spotify.com/documentation/general/guides/authorization-guide/#list-of-scopes) scope.*"
+  email: String
+  "The user's explicit content settings. *This field is only available when the current user has granted access to the [user-read-private](https://developer.spotify.com/documentation/general/guides/authorization-guide/#list-of-scopes) scope.*"
+  explicit_content: ExplicitContentSettings
+  "Known external URLs for this user."
+  external_urls: ExternalUrl
+  "Information about the followers of the user."
+  followers: Followers
+  "A link to the Web API endpoint for this user."
+  href: String
+  "The [Spotify user ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the user."
+  id: String
+  "The user's profile image."
+  images: [Image]
+  "The user's Spotify subscription level: 'premium', 'free', etc. (The subscription level 'open' can be considered the same as 'free'.) *This field is only available when the current user has granted access to the [user-read-private](https://developer.spotify.com/documentation/general/guides/authorization-guide/#list-of-scopes) scope.*"
+  product: String
+  "The object type: 'user'"
+  spotify_type: String
+  "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the user."
+  uri: String
+}
+
 "[PublicUserObject](https://developer.spotify.com/documentation/web-api/reference/#object-publicuserobject)"
 type PublicUser {
   "The name displayed on the user's profile. `null` if not available."
@@ -380,6 +486,24 @@ type Query {
     "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
     uris: [String]
   ): [Artist]
+  categories(
+    "A country: an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). Provide this parameter if you want to narrow the list of returned categories to those relevant to a particular country. If omitted, the returned items will be globally relevant."
+    country: String, 
+    "The maximum number of categories to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int, 
+    "The desired language, consisting of an [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1) language code and an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), joined by an underscore. For example: `es_MX`, meaning \"Spanish (Mexico)\". Provide this parameter if you want the category metadata returned in a particular language. Note that, if `locale` is not supplied, or if the specified language is not available, all strings will be returned in the Spotify default language (American English). The `locale` parameter, combined with the `country` parameter, may give odd results if not carefully matched. For example `country=SE&locale=de_DE` will return a list of categories relevant to Sweden but as German language strings."
+    locale: String, 
+    "The index of the first item to return. Default: 0 (the first object). Use with `limit` to get the next set of categories."
+    offset: Int
+  ): PagingCategory
+  category(
+    "The [Spotify category ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the category."
+    category_id: String!, 
+    "A country: an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). Provide this parameter to ensure that the category exists for a particular country."
+    country: String, 
+    "The desired language, consisting of an [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1) language code and an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), joined by an underscore. For example: `es_MX`, meaning \"Spanish (Mexico)\". Provide this parameter if you want the category strings returned in a particular language. Note that, if `locale` is not supplied, or if the specified language is not available, the category strings returned will be in the Spotify default language (American English)."
+    locale: String
+  ): Category
   episode(
     "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
     id: String, 
@@ -392,6 +516,28 @@ type Query {
     "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
     uris: [String]
   ): [Episode]
+  featured_playlists(
+    "A country: an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). Provide this parameter if you want the list of returned items to be relevant to a particular country. If omitted, the returned items will be relevant to all countries."
+    country: String, 
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int, 
+    "The desired language, consisting of a lowercase [ISO 639-1 language code](http://en.wikipedia.org/wiki/ISO_639-1) and an uppercase [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), joined by an underscore. For example: `es_MX`, meaning \"Spanish (Mexico)\". Provide this parameter if you want the results returned in a particular language (where available). Note that, if `locale` is not supplied, or if the specified language is not available, all strings will be returned in the Spotify default language (American English). The `locale` parameter, combined with the `country` parameter, may give odd results if not carefully matched. For example `country=SE&locale=de_DE` will return a list of categories relevant to Sweden but as German language strings."
+    locale: String, 
+    "The index of the first item to return. Default: 0 (the first object). Use with `limit` to get the next set of items."
+    offset: Int, 
+    "A timestamp in [ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601): `yyyy-MM-ddTHH:mm:ss`. Use this parameter to specify the user's local time to get results tailored for that specific date and time in the day. If not provided, the response defaults to the current UTC time. Example: \"2014-10-23T09:00:00\" for a user whose local time is 9AM. If there were no featured playlists (or there is no data) at the specified time, the response will revert to the current UTC time."
+    timestamp: String
+  ): FeaturedPlaylist
+  markets: [String]
+  me: PrivateUser
+  new_releases(
+    "A country: an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). Provide this parameter if you want the list of returned items to be relevant to a particular country. If omitted, the returned items will be relevant to all countries."
+    country: String, 
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int, 
+    "The index of the first item to return. Default: 0 (the first object). Use with `limit` to get the next set of items."
+    offset: Int
+  ): PagingAlbum
   playlist(
     "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
     id: String, 
@@ -428,6 +574,10 @@ type Query {
     "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
     uris: [String]
   ): [Track]
+  user(
+    "The user's [Spotify user ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids)."
+    user_id: String!
+  ): PublicUser
 }
 
 "[ResumePointObject](https://developer.spotify.com/documentation/web-api/reference/#object-resumepointobject)"

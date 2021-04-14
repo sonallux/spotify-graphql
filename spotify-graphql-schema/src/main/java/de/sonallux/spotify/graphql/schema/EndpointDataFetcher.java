@@ -1,6 +1,7 @@
 package de.sonallux.spotify.graphql.schema;
 
 import de.sonallux.spotify.core.model.SpotifyWebApiEndpoint;
+import graphql.GraphQLException;
 import graphql.GraphqlErrorException;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
@@ -16,20 +17,30 @@ import static de.sonallux.spotify.core.model.SpotifyWebApiEndpoint.ParameterLoca
 public class EndpointDataFetcher implements DataFetcher<Object> {
     private final SpotifyWebApiEndpoint endpoint;
     private final String fieldExtraction;
+    private final boolean isIdProvidedByParent;
 
     @Override
     public Object get(DataFetchingEnvironment environment) throws Exception {
-        Map<?, ?> parentObject = environment.getSource();
-        var id = (String) parentObject.get("id");
         var pathParam = endpoint.getParameters().stream()
             .filter(p -> p.getLocation() == PATH)
             .findFirst()
             .orElse(null);
-        if (pathParam != null && id == null) {
-            throw GraphqlErrorException.newErrorException().message("Missing path parameter: " + pathParam.getName()).build();
+
+        String path;
+        if (isIdProvidedByParent) {
+            if (pathParam == null) {
+                throw GraphqlErrorException.newErrorException().message("Missing path parameter").build();
+            }
+            Map<?, ?> parentObject = environment.getSource();
+            var id = (String) parentObject.get("id");
+            path = endpoint.getPath().replace("{" + pathParam.getName() + "}", id);
+        } else if (pathParam != null) {
+            String id = environment.getArgument(pathParam.getName());
+            path = endpoint.getPath().replace("{" + pathParam.getName() + "}", id);
+        } else {
+            path = endpoint.getPath();
         }
 
-        var path = pathParam == null ? endpoint.getPath() : endpoint.getPath().replace("{" + pathParam.getName() + "}", id);
         var urlBuilder = HttpUrl.get("https://base-url" + path).newBuilder();
 
         //TODO: check required or optional parameters

@@ -27,12 +27,20 @@ class EndpointMapping {
         .addField(new SchemaField("tracks", "Array[TrackObject]"));
 
     static final List<EndpointMapping> MAPPINGS = List.of(
-        new EndpointMapping("category-albums", "endpoint-get-an-albums-tracks", "AlbumObject", "tracks"),
-        new EndpointMapping("category-artists", "endpoint-get-an-artists-albums", "ArtistObject", "albums"),
-        new EndpointMapping("category-artists", "endpoint-get-an-artists-related-artists", "ArtistObject", "related_artists", "artists"),
-        new EndpointMapping("category-artists", "endpoint-get-an-artists-top-tracks", "ArtistObject", "top_tracks", "tracks"),
-        new EndpointMapping("category-playlists", "endpoint-get-playlists-tracks", "PlaylistObject", "tracks"),
-        new EndpointMapping("category-shows", "endpoint-get-a-shows-episodes", "ShowObject", "episodes")
+        new EndpointMapping("category-albums", "endpoint-get-an-albums-tracks", "AlbumObject", "tracks").isIdProvidedByParent(true),
+        new EndpointMapping("category-artists", "endpoint-get-an-artists-albums", "ArtistObject", "albums").isIdProvidedByParent(true),
+        new EndpointMapping("category-artists", "endpoint-get-an-artists-related-artists", "ArtistObject", "related_artists").isIdProvidedByParent(true).fieldExtraction("artists"),
+        new EndpointMapping("category-artists", "endpoint-get-an-artists-top-tracks", "ArtistObject", "top_tracks").isIdProvidedByParent(true).fieldExtraction("tracks"),
+        new EndpointMapping("category-playlists", "endpoint-get-playlists-tracks", "PlaylistObject", "tracks").isIdProvidedByParent(true),
+        new EndpointMapping("category-shows", "endpoint-get-a-shows-episodes", "ShowObject", "episodes").isIdProvidedByParent(true),
+        new EndpointMapping("category-users-profile", "endpoint-get-current-users-profile", "Query", "me"),
+        new EndpointMapping("category-users-profile", "endpoint-get-users-profile", "Query", "user"),
+        new EndpointMapping("category-markets", "endpoint-get-available-markets", "Query", "markets").fieldExtraction("markets"),
+        new EndpointMapping("category-browse", "endpoint-get-new-releases", "Query", "new_releases").fieldExtraction("albums"),
+        new EndpointMapping("category-browse", "endpoint-get-featured-playlists", "Query", "featured_playlists"),
+        new EndpointMapping("category-browse", "endpoint-get-categories", "Query", "categories").fieldExtraction("categories"),
+        new EndpointMapping("category-browse", "endpoint-get-a-category", "Query", "category"),
+        new EndpointMapping("category-browse", "endpoint-get-a-categories-playlists", "CategoryObject", "playlists").isIdProvidedByParent(true).fieldExtraction("playlists")
     );
 
     private final String categoryId;
@@ -40,9 +48,20 @@ class EndpointMapping {
     private final String objectName;
     private final String fieldName;
     private String fieldExtraction;
+    private boolean isIdProvidedByParent;
 
     EndpointMapping(String categoryId, String endpointId, String objectName, String fieldName) {
-        this(categoryId, endpointId, objectName, fieldName, null);
+        this(categoryId, endpointId, objectName, fieldName, null, false);
+    }
+
+    EndpointMapping fieldExtraction(String fieldExtraction) {
+        this.fieldExtraction = fieldExtraction;
+        return this;
+    }
+
+    EndpointMapping isIdProvidedByParent(boolean isIdProvidedByParent) {
+        this.isIdProvidedByParent = isIdProvidedByParent;
+        return this;
     }
 
     SpotifyWebApiEndpoint getEndpoint(SpotifyWebApi spotifyWebApi) {

@@ -14,12 +14,13 @@ class SchemaField {
     private String description;
     private SpotifyWebApiEndpoint endpoint;
     private String fieldExtraction;
+    private boolean isIdProvidedByParent;
 
     SchemaField(String name, String type) {
-        this(name, type, null, null, null);
+        this(name, type, null, null, null, false);
     }
 
     SchemaField(String name, String type, String description) {
-        this(name, type, description, null, null);
+        this(name, type, description, null, null, false);
     }
 }

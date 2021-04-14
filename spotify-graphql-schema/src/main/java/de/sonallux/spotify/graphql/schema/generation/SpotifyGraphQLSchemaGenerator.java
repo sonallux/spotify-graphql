@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
+import static de.sonallux.spotify.core.model.SpotifyWebApiEndpoint.ParameterLocation.*;
 import static graphql.Scalars.*;
 import static graphql.schema.FieldCoordinates.coordinates;
 import static graphql.schema.GraphQLArgument.newArgument;
@@ -23,7 +24,7 @@ import static graphql.schema.GraphQLTypeReference.typeRef;
 
 @Slf4j
 public class SpotifyGraphQLSchemaGenerator {
-    private static final List<String> ARGUMENTS_TO_ADD = List.of("limit", "offset");
+    private static final List<String> ARGUMENTS_TO_IGNORE = List.of("market", "fields", "additional_types");
 
     private final GraphQLSchema.Builder schemaBuilder;
     private final GraphQLCodeRegistry.Builder codeRegistryBuilder;
@@ -54,12 +55,15 @@ public class SpotifyGraphQLSchemaGenerator {
             .name(objectName)
             .description(schemaObject.getDescription())
             .fields(schemaObject.getFields().values().stream()
-                .map(field -> generateQueryObjectFieldDefinition(objectName, field))
+                .map(field -> generateQueryObjectFieldDefinition(schemaObject, field))
                 .collect(Collectors.toList()))
             .build();
     }
 
-    private GraphQLFieldDefinition generateQueryObjectFieldDefinition(String objectName, SchemaField field) {
+    private GraphQLFieldDefinition generateQueryObjectFieldDefinition(SchemaObject schemaObject, SchemaField field) {
+        if (field.getEndpoint() != null) {
+            return generateFieldDefinition(schemaObject, field);
+        }
         var builder = newFieldDefinition()
             .name(field.getName())
             .type(toGraphQLType(field.getType()));
@@ -80,7 +84,7 @@ public class SpotifyGraphQLSchemaGenerator {
                     .type(list(GraphQLString)));
             var baseName = field.getName().substring(0, field.getName().length() - 1);
             codeRegistryBuilder
-                .dataFetcher(coordinates(objectName, field.getName()), new BaseObjectsDataFetcher(baseName));
+                .dataFetcher(coordinates(schemaObject.getName(), field.getName()), new BaseObjectsDataFetcher(baseName));
         } else {
             builder
                 .argument(newArgument()
@@ -92,7 +96,7 @@ public class SpotifyGraphQLSchemaGenerator {
                     .description("The Spotify URI of the object to query. Either `id` or `uri` must be specified")
                     .type(GraphQLString));
             codeRegistryBuilder
-                .dataFetcher(coordinates(objectName, field.getName()), new BaseObjectDataFetcher(field.getName()));
+                .dataFetcher(coordinates(schemaObject.getName(), field.getName()), new BaseObjectDataFetcher(field.getName()));
         }
 
         return builder.build();
@@ -103,13 +107,14 @@ public class SpotifyGraphQLSchemaGenerator {
             .name(toGraphQLObjectName(schemaObject.getName()))
             .description(schemaObject.getDescription())
             .fields(schemaObject.getFields().values().stream()
-                .peek(schemaField -> registerDataFetcherForField(schemaObject, schemaField))
-                .map(this::generateFieldDefinition)
+                .map(field -> generateFieldDefinition(schemaObject, field))
                 .collect(Collectors.toList()))
             .build();
     }
 
-    private GraphQLFieldDefinition generateFieldDefinition(SchemaField schemaField) {
+    private GraphQLFieldDefinition generateFieldDefinition(SchemaObject schemaObject, SchemaField schemaField) {
+        registerDataFetcherForField(schemaObject, schemaField);
+
         var builder = newFieldDefinition()
             .name("type".equals(schemaField.getName()) ? "spotify_type" : schemaField.getName())
             .type(toGraphQLType(schemaField.getType()));
@@ -120,17 +125,32 @@ public class SpotifyGraphQLSchemaGenerator {
 
         var endpoint = schemaField.getEndpoint();
         if (endpoint != null) {
-            endpoint.getParameters().stream()
-                .filter(p -> p.getLocation() == SpotifyWebApiEndpoint.ParameterLocation.QUERY)
-                .filter(p -> ARGUMENTS_TO_ADD.contains(p.getName()))
-                .forEach(p -> builder.argument(newArgument()
-                    .name(p.getName())
-                    .description(p.getDescription())
-                    .type(getGraphQLInputType(p.getType()))
-                ));
+            for (var parameter : endpoint.getParameters()) {
+                if (parameter.getLocation() == HEADER) {
+                    continue;
+                }
+                if (parameter.getLocation() == PATH && schemaField.isIdProvidedByParent()) {
+                    continue;
+                }
+                if (parameter.getLocation() == QUERY && ARGUMENTS_TO_IGNORE.contains(parameter.getName())) {
+                    continue;
+                }
+                builder.argument(newArgument()
+                    .name(parameter.getName())
+                    .description(parameter.getDescription())
+                    .type(wrapInputType(getGraphQLInputType(parameter.getType()), parameter.isRequired()))
+                );
+            }
         }
 
         return builder.build();
+    }
+
+    private GraphQLInputType wrapInputType(GraphQLInputType type, boolean isRequired) {
+        if (isRequired) {
+            return GraphQLNonNull.nonNull(type);
+        }
+        return type;
     }
 
     private void registerDataFetcherForField(SchemaObject schemaObject, SchemaField schemaField) {
@@ -140,7 +160,7 @@ public class SpotifyGraphQLSchemaGenerator {
         }
 
         var coords = coordinates(toGraphQLObjectName(schemaObject.getName()), schemaField.getName());
-        var dataFetcher = new EndpointDataFetcher(endpoint, schemaField.getFieldExtraction());
+        var dataFetcher = new EndpointDataFetcher(endpoint, schemaField.getFieldExtraction(), schemaField.isIdProvidedByParent());
         codeRegistryBuilder.dataFetcher(coords, dataFetcher);
     }
 

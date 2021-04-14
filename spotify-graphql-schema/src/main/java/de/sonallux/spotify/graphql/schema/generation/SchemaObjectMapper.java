@@ -42,6 +42,7 @@ class SchemaObjectMapper {
             }
             field.setEndpoint(endpoint);
             field.setFieldExtraction(endpointMapping.getFieldExtraction());
+            field.setIdProvidedByParent(endpointMapping.isIdProvidedByParent());
         }
         return schemaObjectMap;
     }
