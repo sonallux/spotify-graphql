@@ -29,8 +29,7 @@ public class SpotifyPropertyDataFetcher implements DataFetcher<Object> {
         }
         //Property might not be present because it is a simplified object
         //Try to load the full object
-        if (environment.getSource() instanceof Map) {
-            var parentObject = (Map) environment.getSource();
+        if (environment.getSource() instanceof Map<?, ?> parentObject) {
             var id = (String) parentObject.get("id");
             var type = (String) parentObject.get("type");
             if (id != null && type != null) {
