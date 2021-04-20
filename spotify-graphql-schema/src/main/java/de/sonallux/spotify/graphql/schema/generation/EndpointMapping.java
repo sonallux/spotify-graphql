@@ -40,7 +40,10 @@ class EndpointMapping {
         new EndpointMapping("category-browse", "endpoint-get-featured-playlists", "Query", "featured_playlists"),
         new EndpointMapping("category-browse", "endpoint-get-categories", "Query", "categories").fieldExtraction("categories"),
         new EndpointMapping("category-browse", "endpoint-get-a-category", "Query", "category"),
-        new EndpointMapping("category-browse", "endpoint-get-a-categories-playlists", "CategoryObject", "playlists").isIdProvidedByParent(true).fieldExtraction("playlists")
+        new EndpointMapping("category-browse", "endpoint-get-a-categories-playlists", "CategoryObject", "playlists").isIdProvidedByParent(true).fieldExtraction("playlists"),
+        new EndpointMapping("category-browse", "endpoint-get-recommendations", "Query", "recommendation"),
+        new EndpointMapping("category-browse", "endpoint-get-recommendation-genres", "Query", "recommendation_genres").fieldExtraction("genres")
+
     );
 
     private final String categoryId;

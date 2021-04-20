@@ -168,7 +168,7 @@ public class SpotifyGraphQLSchemaGenerator {
         Matcher matcher;
         if ("Boolean".equals(type)) {
             return GraphQLBoolean;
-        } else if ("Float".equals(type)) {
+        } else if ("Float".equals(type) || "Number".equals(type)) {
             return GraphQLFloat;
         } else if ("Integer".equals(type)) {
             return GraphQLInt;
@@ -192,7 +192,7 @@ public class SpotifyGraphQLSchemaGenerator {
     private static GraphQLInputType getGraphQLInputType(String type) {
         if ("Boolean".equals(type)) {
             return GraphQLBoolean;
-        } else if ("Float".equals(type)) {
+        } else if ("Float".equals(type) || "Number".equals(type)) {
             return GraphQLFloat;
         } else if ("Integer".equals(type)) {
             return GraphQLInt;
