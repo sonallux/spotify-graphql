@@ -1,3 +1,6 @@
 target/
 *.iml
 .idea/
+
+# Ignore spotify client id and client secrets
+spotify-graphql-server/src/main/resources/spotify-secrets.yml
