@@ -1,7 +1,6 @@
 package de.sonallux.spotify.graphql.schema.loader;
 
 import de.sonallux.spotify.graphql.HttpClient;
-import graphql.GraphqlErrorException;
 import okhttp3.HttpUrl;
 import org.dataloader.BatchLoaderEnvironment;
 import org.dataloader.Try;
@@ -30,9 +29,7 @@ public class RawBatchLoader extends SingleRequestBatchLoader<HttpUrl> {
                 if (response instanceof Map) {
                     return Try.succeeded(((Map<?, ?>) response).get(fieldExtraction));
                 } else {
-                    return Try.failed(GraphqlErrorException.newErrorException()
-                        .message("Can not perform fieldExtraction on " + response)
-                        .build());
+                    return Try.failed(getGraphQLErrorException("Can not perform fieldExtraction on " + response));
                 }
             }
         }

@@ -3,14 +3,14 @@ package de.sonallux.spotify.graphql;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 
 import java.io.IOException;
 
 @AllArgsConstructor
 public class HttpClient {
+    private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json; charset=UTF-8");
+
     private final OkHttpClient httpClient;
     private final ObjectMapper objectMapper;
 
@@ -18,13 +18,23 @@ public class HttpClient {
         this(new OkHttpClient(), new ObjectMapper());
     }
 
-    public <T> T request(Request request, TypeReference<T> type) throws IOException {
+    public Response request(Request request) throws IOException {
         try (var response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                return objectMapper.readValue(response.body().charStream(), type);
+                return response;
             }
             throw toHttpClientException(response);
         }
+    }
+
+    public <T> T request(Request request, TypeReference<T> type) throws IOException {
+        var response = request(request);
+        return objectMapper.readValue(response.body().charStream(), type);
+    }
+
+    public RequestBody createJsonBody(Object body) throws IOException {
+        byte[] bytes = objectMapper.writeValueAsBytes(body);
+        return RequestBody.create(bytes, JSON_MEDIA_TYPE);
     }
 
     private HttpClientException toHttpClientException(Response response) {

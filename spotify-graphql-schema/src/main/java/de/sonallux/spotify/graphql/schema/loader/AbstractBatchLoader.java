@@ -27,6 +27,10 @@ abstract class AbstractBatchLoader<K> implements BatchLoaderWithContext<K, Try<?
         return GraphqlErrorException.newErrorException().message(e.getMessage()).cause(e).build();
     }
 
+    protected GraphqlErrorException getGraphQLErrorException(String message) {
+        return GraphqlErrorException.newErrorException().message(message).build();
+    }
+
     protected Request.Builder getRequestBuilder(BatchLoaderEnvironment environment) {
         Map<String, String> context = environment.getContext();
         return new Request.Builder().addHeader("Authorization", context.get("authorizationHeader"));

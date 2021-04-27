@@ -16,7 +16,7 @@ class SchemaObjectMapper {
     private static final List<String> PRIMITIVE_TYPES = List.of("Boolean", "Float", "Integer", "String", "Timestamp");
 
     private final SpotifyWebApi spotifyWebApi;
-    private final Map<String, SchemaObject> schemaObjectMap = new TreeMap<>();
+    private final Map<String, SchemaObject> schemaObjectMap = new TreeMap<>(); // SpotifyObject name -> SchemaObject
     private final Queue<String> queue = new LinkedList<>(); // SpotifyObject name
 
     Map<String, SchemaObject> generate() {
@@ -44,6 +44,15 @@ class SchemaObjectMapper {
             field.setFieldExtraction(endpointMapping.getFieldExtraction());
             field.setIdProvidedByParent(endpointMapping.isIdProvidedByParent());
         }
+
+        spotifyWebApi.getCategoryList().stream()
+            .flatMap(c -> c.getEndpointList().stream())
+            .filter(e -> !"GET".equals(e.getHttpMethod()))
+            .flatMap(e -> e.getResponseTypes().stream())
+            .filter(r -> !"Void".equals(r.getType()))
+            .forEach(r -> addToQueue(r.getType()));
+        iterate();
+
         return schemaObjectMap;
     }
 

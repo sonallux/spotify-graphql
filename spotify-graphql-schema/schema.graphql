@@ -24,6 +24,15 @@ directive @specifiedBy(
 
 union UnionTrackEpisode = Episode | Track
 
+type AddToQueuePayload {
+  status: Int
+}
+
+type AddTracksToPlaylistPayload {
+  snapshot_id: SnapshotId
+  status: Int
+}
+
 "[AlbumObject](https://developer.spotify.com/documentation/web-api/reference/#object-albumobject)"
 type Album {
   "The type of the album: `album`, `single`, or `compilation`."
@@ -145,12 +154,21 @@ type Category {
   ): PagingPlaylist
 }
 
+type ChangePlaylistDetailsPayload {
+  status: Int
+}
+
 "[CopyrightObject](https://developer.spotify.com/documentation/web-api/reference/#object-copyrightobject)"
 type Copyright {
   "The type of copyright: `C` = the copyright, `P` = the sound recording (performance) copyright."
   spotify_type: String
   "The copyright text for this content."
   text: String
+}
+
+type CreatePlaylistPayload {
+  playlist: Playlist
+  status: Int
 }
 
 "[EpisodeObject](https://developer.spotify.com/documentation/web-api/reference/#object-episodeobject)"
@@ -241,6 +259,14 @@ type FeaturedPlaylist {
   playlists: PagingPlaylist
 }
 
+type FollowArtistsUsersPayload {
+  status: Int
+}
+
+type FollowPlaylistPayload {
+  status: Int
+}
+
 "[FollowersObject](https://developer.spotify.com/documentation/web-api/reference/#object-followersobject)"
 type Followers {
   "A link to the Web API endpoint providing full details of the followers; `null` if not available. Please note that this will always be set to null, as the Web API does not support it at the moment."
@@ -271,6 +297,84 @@ type LinkedTrack {
   spotify_type: String
   "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the track."
   uri: String
+}
+
+type Mutation {
+  "Add an item to the end of the user's current playback queue."
+  addToQueue(input: addToQueueInput!): AddToQueuePayload
+  "Add one or more items to a user's playlist."
+  addTracksToPlaylist(input: addTracksToPlaylistInput!): AddTracksToPlaylistPayload
+  """
+  Change a playlist's name and public/private state. (The user must, of
+  course, own the playlist.)
+  """
+  changePlaylistDetails(input: changePlaylistDetailsInput!): ChangePlaylistDetailsPayload
+  """
+  Create a playlist for a Spotify user. (The playlist will be empty until
+  you [add tracks](https://developer.spotify.com/documentation/web-api/reference/#endpoint-add-tracks-to-playlist).)
+  """
+  createPlaylist(input: createPlaylistInput!): CreatePlaylistPayload
+  "Add the current user as a follower of one or more artists or other Spotify users."
+  followArtistsUsers(input: followArtistsUsersInput!): FollowArtistsUsersPayload
+  "Add the current user as a follower of a playlist."
+  followPlaylist(input: followPlaylistInput!): FollowPlaylistPayload
+  "Pause playback on the user's account."
+  pauseAUsersPlayback(input: pauseAUsersPlaybackInput!): PauseAUsersPlaybackPayload
+  "Remove one or more albums from the current user's 'Your Music' library."
+  removeAlbumsUser(input: removeAlbumsUserInput!): RemoveAlbumsUserPayload
+  """
+  Remove one or more episodes from the current user's library.  
+  
+  This API endpoint is in **beta** and could change without warning. Please share any feedback that you have, or issues that you discover, in our [developer community forum](https://community.spotify.com/t5/Spotify-for-Developers/bd-p/Spotify_Developer).
+  """
+  removeEpisodesUser(input: removeEpisodesUserInput!): RemoveEpisodesUserPayload
+  "Delete one or more shows from current Spotify user's library."
+  removeShowsUser(input: removeShowsUserInput!): RemoveShowsUserPayload
+  "Remove one or more items from a user's playlist."
+  removeTracksPlaylist(input: removeTracksPlaylistInput!): RemoveTracksPlaylistPayload
+  "Remove one or more tracks from the current user's 'Your Music' library."
+  removeTracksUser(input: removeTracksUserInput!): RemoveTracksUserPayload
+  "Reorder an item or a group of items in a playlist."
+  reorderPlaylistsTracks(input: reorderPlaylistsTracksInput!): ReorderPlaylistsTracksPayload
+  "Replace all the items in a playlist, overwriting its existing items. This powerful request can be useful for replacing items, re-ordering existing items, or clearing the playlist."
+  replacePlaylistsTracks(input: replacePlaylistsTracksInput!): ReplacePlaylistsTracksPayload
+  "Save one or more albums to the current user's 'Your Music' library."
+  saveAlbumsUser(input: saveAlbumsUserInput!): SaveAlbumsUserPayload
+  """
+  Save one or more episodes to the current user's library.  
+  
+  This API endpoint is in **beta** and could change without warning. Please share any feedback that you have, or issues that you discover, in our [developer community forum](https://community.spotify.com/t5/Spotify-for-Developers/bd-p/Spotify_Developer).
+  """
+  saveEpisodesUser(input: saveEpisodesUserInput!): SaveEpisodesUserPayload
+  "Save one or more shows to current Spotify user's library."
+  saveShowsUser(input: saveShowsUserInput!): SaveShowsUserPayload
+  "Save one or more tracks to the current user's 'Your Music' library."
+  saveTracksUser(input: saveTracksUserInput!): SaveTracksUserPayload
+  "Seeks to the given position in the user's currently playing track."
+  seekToPositionInCurrentlyPlayingTrack(input: seekToPositionInCurrentlyPlayingTrackInput!): SeekToPositionInCurrentlyPlayingTrackPayload
+  """
+  Set the repeat mode for the user's playback. Options are repeat-track,
+  repeat-context, and off.
+  """
+  setRepeatModeOnUsersPlayback(input: setRepeatModeOnUsersPlaybackInput!): SetRepeatModeOnUsersPlaybackPayload
+  "Set the volume for the user's current playback device."
+  setVolumeForUsersPlayback(input: setVolumeForUsersPlaybackInput!): SetVolumeForUsersPlaybackPayload
+  "Skips to next track in the user's queue."
+  skipUsersPlaybackToNextTrack(input: skipUsersPlaybackToNextTrackInput!): SkipUsersPlaybackToNextTrackPayload
+  "Skips to previous track in the user's queue."
+  skipUsersPlaybackToPreviousTrack(input: skipUsersPlaybackToPreviousTrackInput!): SkipUsersPlaybackToPreviousTrackPayload
+  "Start a new context or resume current playback on the user's active device."
+  startAUsersPlayback(input: startAUsersPlaybackInput!): StartAUsersPlaybackPayload
+  "Toggle shuffle on or off for user's playback."
+  toggleShuffleForUsersPlayback(input: toggleShuffleForUsersPlaybackInput!): ToggleShuffleForUsersPlaybackPayload
+  "Transfer playback to a new device and determine if it should start playing."
+  transferAUsersPlayback(input: transferAUsersPlaybackInput!): TransferAUsersPlaybackPayload
+  "Remove the current user as a follower of one or more artists or other Spotify users."
+  unfollowArtistsUsers(input: unfollowArtistsUsersInput!): UnfollowArtistsUsersPayload
+  "Remove the current user as a follower of a playlist."
+  unfollowPlaylist(input: unfollowPlaylistInput!): UnfollowPlaylistPayload
+  "Replace the image used to represent a specific playlist."
+  uploadCustomPlaylistCover(input: uploadCustomPlaylistCoverInput!): UploadCustomPlaylistCoverPayload
 }
 
 "[PagingAlbumObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
@@ -379,6 +483,10 @@ type PagingTrack {
   previous: String
   "The total number of items available to return."
   total: Int
+}
+
+type PauseAUsersPlaybackPayload {
+  status: Int
 }
 
 "[PlaylistObject](https://developer.spotify.com/documentation/web-api/reference/#object-playlistobject)"
@@ -716,12 +824,70 @@ type Recommendations {
   tracks: [Track]
 }
 
+type RemoveAlbumsUserPayload {
+  status: Int
+}
+
+type RemoveEpisodesUserPayload {
+  status: Int
+}
+
+type RemoveShowsUserPayload {
+  status: Int
+}
+
+type RemoveTracksPlaylistPayload {
+  snapshot_id: SnapshotId
+  status: Int
+}
+
+type RemoveTracksUserPayload {
+  status: Int
+}
+
+type ReorderPlaylistsTracksPayload {
+  snapshot_id: SnapshotId
+  status: Int
+}
+
+type ReplacePlaylistsTracksPayload {
+  status: Int
+}
+
 "[ResumePointObject](https://developer.spotify.com/documentation/web-api/reference/#object-resumepointobject)"
 type ResumePoint {
   "Whether or not the episode has been fully played by the user."
   fully_played: Boolean
   "The user's most recent position in the episode in milliseconds."
   resume_position_ms: Int
+}
+
+type SaveAlbumsUserPayload {
+  status: Int
+}
+
+type SaveEpisodesUserPayload {
+  status: Int
+}
+
+type SaveShowsUserPayload {
+  status: Int
+}
+
+type SaveTracksUserPayload {
+  status: Int
+}
+
+type SeekToPositionInCurrentlyPlayingTrackPayload {
+  status: Int
+}
+
+type SetRepeatModeOnUsersPlaybackPayload {
+  status: Int
+}
+
+type SetVolumeForUsersPlaybackPayload {
+  status: Int
 }
 
 "[ShowObject](https://developer.spotify.com/documentation/web-api/reference/#object-showobject)"
@@ -763,6 +929,27 @@ type Show {
   spotify_type: String
   "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the show."
   uri: String
+}
+
+type SkipUsersPlaybackToNextTrackPayload {
+  status: Int
+}
+
+type SkipUsersPlaybackToPreviousTrackPayload {
+  status: Int
+}
+
+type SnapshotId {
+  "The snapshot_id can be used to identify your playlist version in future requests."
+  snapshot_id: String
+}
+
+type StartAUsersPlaybackPayload {
+  status: Int
+}
+
+type ToggleShuffleForUsersPlaybackPayload {
+  status: Int
 }
 
 "[TrackObject](https://developer.spotify.com/documentation/web-api/reference/#object-trackobject)"
@@ -824,4 +1011,280 @@ type TrackRestriction {
     Additional reasons may be added in the future. **Note**: If you use this field, make sure that your application safely handles unknown values.
   """
   reason: String
+}
+
+type TransferAUsersPlaybackPayload {
+  status: Int
+}
+
+type UnfollowArtistsUsersPayload {
+  status: Int
+}
+
+type UnfollowPlaylistPayload {
+  status: Int
+}
+
+type UploadCustomPlaylistCoverPayload {
+  status: Int
+}
+
+input addToQueueInput {
+  "The id of the device this command is targeting. If not supplied, the user's currently active device is the target."
+  device_id: String
+  "The uri of the item to add to the queue. Must be a track or an episode uri."
+  uri: String!
+}
+
+input addTracksToPlaylistInput {
+  "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the playlist."
+  playlist_id: String!
+  "The position to insert the items, a zero-based index. For example, to insert the items in the first position: `position=0` ; to insert the items in the third position: `position=2`. If omitted, the items will be appended to the playlist. Items are added in the order they appear in the uris array. For example: `{\"uris\": [\"spotify:track:4iV5W9uYEdYUVa79Axb7Rh\",\"spotify:track:1301WleyT98MSxVHPZCA6M\"], \"position\": 3}`"
+  position: Int
+  """
+  A JSON array of the [Spotify URIs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) to add. For example: `{"uris": ["spotify:track:4iV5W9uYEdYUVa79Axb7Rh","spotify:track:1301WleyT98MSxVHPZCA6M", "spotify:episode:512ojhOuo1ktJprKbVcKyQ"]}`  
+  A maximum of 100 items can be added in one request. *Note: if the `uris` parameter is present in the query string, any URIs listed here in the body will be ignored.*
+  """
+  uris: [String]!
+}
+
+input changePlaylistDetailsInput {
+  "If `true` , the playlist will become collaborative and other users will be able to modify the playlist in their Spotify client. *Note: You can only set `collaborative` to `true` on non-public playlists.*"
+  collaborative: Boolean
+  "Value for playlist description as displayed in Spotify Clients and in the Web API."
+  description: String
+  "The new name for the playlist, for example `\"My New Playlist Title\"`"
+  name: String
+  "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the playlist."
+  playlist_id: String!
+  "If `true` the playlist will be public, if `false` it will be private."
+  public: Boolean
+}
+
+input createPlaylistInput {
+  "Defaults to `false` . If `true` the playlist will be collaborative. Note that to create a collaborative playlist you must also set `public` to `false` . To create collaborative playlists you must have granted `playlist-modify-private` and `playlist-modify-public` [scopes](https://developer.spotify.com/documentation/general/guides/authorization-guide/#list-of-scopes) ."
+  collaborative: Boolean
+  "value for playlist description as displayed in Spotify Clients and in the Web API."
+  description: String
+  "The name for the new playlist, for example `\"Your Coolest Playlist\"` . This name does not need to be unique; a user may have several playlists with the same name."
+  name: String!
+  "Defaults to `true` . If `true` the playlist will be public, if `false` it will be private. To be able to create private playlists, the user must have granted the `playlist-modify-private` [scope](https://developer.spotify.com/documentation/general/guides/authorization-guide/#list-of-scopes)"
+  public: Boolean
+  "The user's [Spotify user ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids)."
+  user_id: String!
+}
+
+input followArtistsUsersInput {
+  "A JSON array of the artist or user [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids). For example: `{ids:[\"74ASZWbe4lXaubB36ztrGX\", \"08td7MxkoHQkXnWAYD8d6Q\"]}`. A maximum of 50 IDs can be sent in one request. *Note: if the `ids` parameter is present in the query string, any IDs listed here in the body will be ignored.*"
+  ids: [String]!
+  "The ID type: either `artist` or `user`."
+  type: String!
+}
+
+input followPlaylistInput {
+  "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) of the playlist. Any playlist can be followed, regardless of its [public/private status](https://developer.spotify.com/documentation/general/guides/working-with-playlists/#public-private-and-collaborative-status), as long as you know its playlist ID."
+  playlist_id: String!
+  "Defaults to `true`. If `true` the playlist will be included in user's public playlists, if `false` it will remain private. To be able to follow playlists privately, the user must have granted the `playlist-modify-private` [scope](https://developer.spotify.com/documentation/general/guides/authorization-guide/#list-of-scopes)."
+  public: Boolean
+}
+
+input pauseAUsersPlaybackInput {
+  "The id of the device this command is targeting. If not supplied, the user's currently active device is the target."
+  device_id: String
+}
+
+input removeAlbumsUserInput {
+  """
+  A JSON array of the [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids). For example: `["4iV5W9uYEdYUVa79Axb7Rh", "1301WleyT98MSxVHPZCA6M"]`  
+  A maximum of 50 items can be specified in one request. *Note: if the `ids` parameter is present in the query string, any IDs listed here in the body will be ignored.*
+  """
+  ids: [String]!
+}
+
+input removeEpisodesUserInput {
+  """
+  A JSON array of the [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids).   
+  A maximum of 50 items can be specified in one request. *Note: if the `ids` parameter is present in the query string, any IDs listed here in the body will be ignored.*
+  """
+  ids: [String]!
+}
+
+input removeShowsUserInput {
+  "A comma-separated list of Spotify IDs for the shows to be deleted from the user's library."
+  ids: String!
+  """
+  An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). If a country code is specified, only shows that are available in that market will be removed.  
+  If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.  
+  *Note: If neither market or user country are provided, the content is considered unavailable for the client.*   
+  Users can view the country that is associated with their account in the [account settings](https://www.spotify.com/se/account/overview/).
+  """
+  market: String
+}
+
+input removeTracksPlaylistInput {
+  "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids)"
+  playlist_id: String!
+  "The playlist's snapshot ID against which you want to make the changes. The API will validate that the specified items exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist."
+  snapshot_id: String
+  "An array of objects containing [Spotify URIs](https://developer.spotify.com/spotify-documentation/web-api/#spotify-uris-and-ids) of the tracks or episodes to remove. For example: `{ \"tracks\": [{ \"uri\": \"spotify:track:4iV5W9uYEdYUVa79Axb7Rh\" },{ \"uri\": \"spotify:track:1301WleyT98MSxVHPZCA6M\" }] }`. A maximum of 100 objects can be sent at once."
+  tracks: [String]!
+}
+
+input removeTracksUserInput {
+  """
+  A JSON array of the [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids). For example: `["4iV5W9uYEdYUVa79Axb7Rh", "1301WleyT98MSxVHPZCA6M"]`  
+  A maximum of 50 items can be specified in one request. *Note: if the `ids` parameter is present in the query string, any IDs listed here in the body will be ignored.*
+  """
+  ids: [String]!
+}
+
+input reorderPlaylistsTracksInput {
+  """
+  The position where the items should be inserted.  
+  To reorder the items to the end of the playlist, simply set *insert_before* to the position after the last item.  
+  Examples:  
+  To reorder the first item to the last position in a playlist with 10 items, set *range_start* to 0, and *insert_before* to 10.  
+  To reorder the last item in a playlist with 10 items to the start of the playlist, set *range_start* to 9, and *insert_before* to 0.
+  """
+  insert_before: Int!
+  "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the playlist."
+  playlist_id: String!
+  """
+  The amount of items to be reordered. Defaults to 1 if not set.  
+  The range of items to be reordered begins from the *range_start* position, and includes the *range_length* subsequent items.  
+  Example:  
+  To move the items at index 9-10 to the start of the playlist, *range_start* is set to 9, and *range_length* is set to 2.
+  """
+  range_length: Int
+  "The position of the first item to be reordered."
+  range_start: Int!
+  "The playlist's snapshot ID against which you want to make the changes."
+  snapshot_id: String
+}
+
+input replacePlaylistsTracksInput {
+  "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the playlist."
+  playlist_id: String!
+  """
+  A comma-separated list of [Spotify URIs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) to set, can be track or episode URIs. For example: `uris=spotify:track:4iV5W9uYEdYUVa79Axb7Rh,spotify:track:1301WleyT98MSxVHPZCA6M,spotify:episode:512ojhOuo1ktJprKbVcKyQ`  
+  A maximum of 100 items can be set in one request.
+  """
+  uris: [String]!
+}
+
+input saveAlbumsUserInput {
+  """
+  A JSON array of the [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids). For example: `["4iV5W9uYEdYUVa79Axb7Rh", "1301WleyT98MSxVHPZCA6M"]`  
+  A maximum of 50 items can be specified in one request. *Note: if the `ids` parameter is present in the query string, any IDs listed here in the body will be ignored.*
+  """
+  ids: [String]!
+}
+
+input saveEpisodesUserInput {
+  """
+  A JSON array of the [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids).   
+  A maximum of 50 items can be specified in one request. *Note: if the `ids` parameter is present in the query string, any IDs listed here in the body will be ignored.*
+  """
+  ids: [String]!
+}
+
+input saveShowsUserInput {
+  "A comma-separated list of the [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids). Maximum: 50 IDs."
+  ids: String!
+}
+
+input saveTracksUserInput {
+  """
+  A JSON array of the [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids). For example: `["4iV5W9uYEdYUVa79Axb7Rh", "1301WleyT98MSxVHPZCA6M"]`  
+  A maximum of 50 items can be specified in one request. *Note: if the `ids` parameter is present in the query string, any IDs listed here in the body will be ignored.*
+  """
+  ids: [String]!
+}
+
+input seekToPositionInCurrentlyPlayingTrackInput {
+  "The id of the device this command is targeting. If not supplied, the user's currently active device is the target."
+  device_id: String
+  "The position in milliseconds to seek to. Must be a positive number. Passing in a position that is greater than the length of the track will cause the player to start playing the next song."
+  position_ms: Int!
+}
+
+input setRepeatModeOnUsersPlaybackInput {
+  "The id of the device this command is targeting. If not supplied, the user's currently active device is the target."
+  device_id: String
+  """
+  **track** , **context** or **off** .  
+  **track** will repeat the current track.  
+  **context** will repeat the current context.  
+  **off** will turn repeat off.
+  """
+  state: String!
+}
+
+input setVolumeForUsersPlaybackInput {
+  "The id of the device this command is targeting. If not supplied, the user's currently active device is the target."
+  device_id: String
+  "The volume to set. Must be a value from 0 to 100 inclusive."
+  volume_percent: Int!
+}
+
+input skipUsersPlaybackToNextTrackInput {
+  "The id of the device this command is targeting. If not supplied, the user's currently active device is the target."
+  device_id: String
+}
+
+input skipUsersPlaybackToPreviousTrackInput {
+  "The id of the device this command is targeting. If not supplied, the user's currently active device is the target."
+  device_id: String
+}
+
+input startAUsersPlaybackInput {
+  "Spotify URI of the context to play. Valid contexts are albums, artists, playlists. Example: {\"context_uri\": \"spotify:album:1Je1IMUlBXcx1Fz0WE7oPT\"}"
+  context_uri: String
+  "The id of the device this command is targeting. If not supplied, the user's currently active device is the target."
+  device_id: String
+  "Indicates from what position to start playback. Must be a positive number. Passing in a position that is greater than the length of the track will cause the player to start playing the next song."
+  position_ms: Int
+  "A JSON array of the Spotify track URIs to play. For example: {\"uris\": [\"spotify:track:4iV5W9uYEdYUVa79Axb7Rh\", \"spotify:track:1301WleyT98MSxVHPZCA6M\"]}"
+  uris: [String]
+}
+
+input toggleShuffleForUsersPlaybackInput {
+  "The id of the device this command is targeting. If not supplied, the user's currently active device is the target."
+  device_id: String
+  """
+  **true** : Shuffle user's playback.  
+  **false** : Do not shuffle user's playback.
+  """
+  state: Boolean!
+}
+
+input transferAUsersPlaybackInput {
+  """
+  A JSON array containing the ID of the device on which playback should be started/transferred.  
+  For example:`{device_ids:["74ASZWbe4lXaubB36ztrGX"]}`  
+  Note: Although an array is accepted, only a single device_id is currently supported. Supplying more than one will return `400 Bad Request`
+  """
+  device_ids: [String]!
+  """
+  **true** : ensure playback happens on new device.  
+  **false** or not provided: keep the current playback state.
+  """
+  play: Boolean
+}
+
+input unfollowArtistsUsersInput {
+  "A JSON array of the artist or user [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids). For example: `{ids:[\"74ASZWbe4lXaubB36ztrGX\", \"08td7MxkoHQkXnWAYD8d6Q\"]}`. A maximum of 50 IDs can be sent in one request. *Note: if the `ids` parameter is present in the query string, any IDs listed here in the body will be ignored.*"
+  ids: [String]!
+  "The ID type: either `artist` or `user`."
+  type: String!
+}
+
+input unfollowPlaylistInput {
+  "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) of the playlist that is to be no longer followed."
+  playlist_id: String!
+}
+
+input uploadCustomPlaylistCoverInput {
+  "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the playlist."
+  playlist_id: String!
 }

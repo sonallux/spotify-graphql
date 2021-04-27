@@ -20,7 +20,7 @@ public class SpotifyGraphQL {
     public SpotifyGraphQL(SpotifyWebApi spotifyWebApi) {
         spotifyGraphQLSchema = new SpotifyGraphQLSchemaGenerator().generate(spotifyWebApi);
         spotifyGraphQL = GraphQL.newGraphQL(spotifyGraphQLSchema).build();
-        spotifyDataLoaderRegistryFactory = new SpotifyDataLoaderRegistryFactory(new HttpClient(), spotifyWebApi);
+        spotifyDataLoaderRegistryFactory = new SpotifyDataLoaderRegistryFactory(spotifyWebApi, new HttpClient());
     }
 
     public SpotifyGraphQL() throws IOException {

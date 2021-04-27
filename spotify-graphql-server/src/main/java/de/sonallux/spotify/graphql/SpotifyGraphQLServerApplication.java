@@ -32,7 +32,7 @@ public class SpotifyGraphQLServerApplication {
 
     @Bean
     SpotifyDataLoaderRegistryFactory createSpotifyDataLoaderBuilder(SpotifyWebApi spotifyWebApi, HttpClient httpClient) {
-	    return new SpotifyDataLoaderRegistryFactory(httpClient, spotifyWebApi);
+	    return new SpotifyDataLoaderRegistryFactory(spotifyWebApi, httpClient);
     }
 
     @Bean

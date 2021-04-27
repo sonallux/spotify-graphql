@@ -14,8 +14,8 @@ import java.util.function.Function;
 
 @AllArgsConstructor
 public class SpotifyDataLoaderRegistryFactory {
-    private final HttpClient httpClient;
     private final SpotifyWebApi spotifyWebApi;
+    private final HttpClient httpClient;
 
     public DataLoaderRegistry create(String authorizationHeader) {
         var dataLoaderOptions = DataLoaderOptions.newOptions()
@@ -33,7 +33,8 @@ public class SpotifyDataLoaderRegistryFactory {
             .register("playlistLoader", newDataLoader.apply(new PlaylistBatchLoader(httpClient)))
             .register("showLoader", newDataLoader.apply(new BaseBatchLoader(httpClient, "shows", 50)))
             .register("trackLoader", newDataLoader.apply(new BaseBatchLoader(httpClient, "tracks", 50)))
-            .register("rawLoader", newDataLoader.apply(new RawBatchLoader(httpClient)));
+            .register("rawLoader", newDataLoader.apply(new RawBatchLoader(httpClient)))
+            .register("mutationEndpointLoader", newDataLoader.apply(new MutationEndpointLoader(httpClient)));
         return dataloaderRegistry;
     }
 }

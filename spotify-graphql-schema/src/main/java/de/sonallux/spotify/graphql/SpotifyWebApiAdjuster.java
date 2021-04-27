@@ -1,5 +1,6 @@
 package de.sonallux.spotify.graphql;
 
+import de.sonallux.spotify.core.EndpointHelper;
 import de.sonallux.spotify.core.SpotifyWebApiUtils;
 import de.sonallux.spotify.core.model.SpotifyWebApi;
 import de.sonallux.spotify.core.model.SpotifyWebApiObject;
@@ -11,6 +12,8 @@ import java.util.stream.Collectors;
 public class SpotifyWebApiAdjuster {
 
     public static void adjust(SpotifyWebApi spotifyWebApi) {
+        EndpointHelper.fixDuplicateEndpointParameters(spotifyWebApi);
+        EndpointHelper.splitEndpoints(spotifyWebApi);
         removeSimplifiedObjects(spotifyWebApi);
         expandPagingObjects(spotifyWebApi);
     }
