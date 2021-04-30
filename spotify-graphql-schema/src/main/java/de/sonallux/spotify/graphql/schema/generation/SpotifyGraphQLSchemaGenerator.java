@@ -8,9 +8,7 @@ import de.sonallux.spotify.graphql.schema.*;
 import graphql.schema.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -41,6 +39,16 @@ public class SpotifyGraphQLSchemaGenerator {
 
     public GraphQLSchema generate(SpotifyWebApi spotifyWebApi) {
         SpotifyWebApiAdjuster.adjust(spotifyWebApi);
+
+        var usedEndpoints = new ArrayList<String>();
+        EndpointMapping.MAPPINGS.stream().map(EndpointMapping::getEndpointId).forEach(usedEndpoints::add);
+        for (var category : spotifyWebApi.getCategoryList()) {
+            category.getEndpointList().stream()
+                .filter(e -> "GET".equals(e.getHttpMethod()))
+                .map(SpotifyWebApiEndpoint::getId)
+                .filter(id -> !usedEndpoints.contains(id))
+                .forEach(endpoint -> System.out.println(category.getId() + " " + endpoint));
+        }
 
         var schemaObjectMap = new SchemaObjectMapper(spotifyWebApi).generate();
 
@@ -78,7 +86,10 @@ public class SpotifyGraphQLSchemaGenerator {
             builder.description(field.getDescription().replace("\"", "'"));
         }
 
-        if (field.getName().endsWith("s")) {
+        if (field.getName().equals("library")) {
+            codeRegistryBuilder
+                .dataFetcher(coordinates(schemaObject.getName(), field.getName()), (DataFetchingEnvironment env) -> Map.of());
+        } else if (field.getName().endsWith("s")) {
             builder
                 .argument(newArgument()
                     .name("ids")
@@ -111,7 +122,8 @@ public class SpotifyGraphQLSchemaGenerator {
     private GraphQLObjectType generateMutationObject(SpotifyWebApi spotifyWebApi) {
         var mutationBuilder = newObject().name("Mutation");
 
-        spotifyWebApi.getCategoryList().stream().flatMap(c -> c.getEndpointList().stream())
+        spotifyWebApi.getCategoryList().stream()
+            .flatMap(c -> c.getEndpointList().stream())
             .filter(e -> !"GET".equals(e.getHttpMethod()))
             .forEach(endpoint -> {
                 var fieldDefinition = generateMutationFieldDefinition(endpoint);

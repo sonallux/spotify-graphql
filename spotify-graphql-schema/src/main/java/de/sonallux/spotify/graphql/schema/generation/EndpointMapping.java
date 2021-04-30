@@ -24,7 +24,8 @@ class EndpointMapping {
         .addField(new SchemaField("show", "ShowObject"))
         .addField(new SchemaField("shows", "Array[ShowObject]"))
         .addField(new SchemaField("track", "TrackObject"))
-        .addField(new SchemaField("tracks", "Array[TrackObject]"));
+        .addField(new SchemaField("tracks", "Array[TrackObject]"))
+        .addField(new SchemaField("library", "LibraryObject"));
 
     static final List<EndpointMapping> MAPPINGS = List.of(
         new EndpointMapping("category-albums", "endpoint-get-an-albums-tracks", "AlbumObject", "tracks").isIdProvidedByParent(true),
@@ -42,7 +43,13 @@ class EndpointMapping {
         new EndpointMapping("category-browse", "endpoint-get-a-category", "Query", "category"),
         new EndpointMapping("category-browse", "endpoint-get-a-categories-playlists", "CategoryObject", "playlists").isIdProvidedByParent(true).fieldExtraction("playlists"),
         new EndpointMapping("category-browse", "endpoint-get-recommendations", "Query", "recommendation"),
-        new EndpointMapping("category-browse", "endpoint-get-recommendation-genres", "Query", "recommendation_genres").fieldExtraction("genres")
+        new EndpointMapping("category-browse", "endpoint-get-recommendation-genres", "Query", "recommendation_genres").fieldExtraction("genres"),
+        new EndpointMapping("category-personalization", "endpoint-get-users-top-artists", "PrivateUserObject", "top_artists"),
+        new EndpointMapping("category-personalization", "endpoint-get-users-top-tracks", "PrivateUserObject", "top_tracks"),
+        new EndpointMapping("category-library", "endpoint-get-users-saved-albums", "LibraryObject", "albums"),
+        new EndpointMapping("category-library", "endpoint-get-users-saved-episodes", "LibraryObject", "episodes"),
+        new EndpointMapping("category-library", "endpoint-get-users-saved-shows", "LibraryObject", "shows"),
+        new EndpointMapping("category-library", "endpoint-get-users-saved-tracks", "LibraryObject", "tracks")
 
     );
 

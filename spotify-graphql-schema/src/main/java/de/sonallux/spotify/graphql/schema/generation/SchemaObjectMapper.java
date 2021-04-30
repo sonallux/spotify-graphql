@@ -93,17 +93,13 @@ class SchemaObjectMapper {
     }
 
     private SchemaObject generateObject(String objectName) {
-        var spotifyObject = spotifyWebApi.getObject(objectName).orElseThrow();
+        var spotifyObject = spotifyWebApi.getObject(objectName).orElseGet(() -> new SpotifyWebApiObject(objectName));
         var fields = spotifyObject.getProperties().stream()
             .map(prop -> {
                 addContainedTypes(prop.getType());
                 return new SchemaField(prop.getName(), prop.getType(), prop.getDescription());
             })
             .collect(Collectors.toMap(SchemaField::getName, f -> f, (f1, f2) -> {throw new RuntimeException("Duplicated field name");}, TreeMap::new));
-
-        if (fields.size() == 0) {
-            throw new RuntimeException("Object has zero fields: " + objectName);
-        }
 
         String description = null;
         if (!Strings.isNullOrEmpty(spotifyObject.getLink())) {

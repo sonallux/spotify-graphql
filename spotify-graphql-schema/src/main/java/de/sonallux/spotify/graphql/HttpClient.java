@@ -19,17 +19,17 @@ public class HttpClient {
     }
 
     public Response request(Request request) throws IOException {
-        try (var response = httpClient.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                return response;
-            }
-            throw toHttpClientException(response);
+        var response = httpClient.newCall(request).execute();
+        if (response.isSuccessful()) {
+            return response;
         }
+        throw toHttpClientException(response);
     }
 
     public <T> T request(Request request, TypeReference<T> type) throws IOException {
-        var response = request(request);
-        return objectMapper.readValue(response.body().charStream(), type);
+        try (var response = request(request)) {
+            return objectMapper.readValue(response.body().charStream(), type);
+        }
     }
 
     public RequestBody createJsonBody(Object body) throws IOException {

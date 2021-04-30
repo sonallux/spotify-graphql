@@ -285,6 +285,33 @@ type Image {
   width: Int
 }
 
+type Library {
+  albums(
+    "The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int, 
+    "The index of the first object to return. Default: 0 (i.e., the first object). Use with `limit` to get the next set of objects."
+    offset: Int
+  ): PagingSavedAlbum
+  episodes(
+    "The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int, 
+    "The index of the first object to return. Default: 0 (i.e., the first object). Use with `limit` to get the next set of objects."
+    offset: Int
+  ): PagingSavedEpisode
+  shows(
+    "The maximum number of shows to return. Default: 20. Minimum: 1. Maximum: 50"
+    limit: Int, 
+    "The index of the first show to return. Default: 0 (the first object). Use with limit to get the next set of shows."
+    offset: Int
+  ): PagingSavedShow
+  tracks(
+    "The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int, 
+    "The index of the first object to return. Default: 0 (i.e., the first object). Use with `limit` to get the next set of objects."
+    offset: Int
+  ): PagingSavedTrack
+}
+
 "[LinkedTrackObject](https://developer.spotify.com/documentation/web-api/reference/#object-linkedtrackobject)"
 type LinkedTrack {
   "Known external URLs for this track."
@@ -395,6 +422,24 @@ type PagingAlbum {
   total: Int
 }
 
+"[PagingArtistObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+type PagingArtist {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested data."
+  items: [Artist]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
 "[PagingCategoryObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
 type PagingCategory {
   "A link to the Web API endpoint returning the full result of the request"
@@ -455,6 +500,78 @@ type PagingPlaylistTrack {
   href: String
   "The requested data."
   items: [PlaylistTrack]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
+"[PagingSavedAlbumObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+type PagingSavedAlbum {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested data."
+  items: [SavedAlbum]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
+"[PagingSavedEpisodeObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+type PagingSavedEpisode {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested data."
+  items: [SavedEpisode]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
+"[PagingSavedShowObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+type PagingSavedShow {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested data."
+  items: [SavedShow]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
+"[PagingSavedTrackObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+type PagingSavedTrack {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested data."
+  items: [SavedTrack]
   "The maximum number of items in the response (as set in the query or by default)."
   limit: Int
   "URL to the next page of items. ( `null` if none)"
@@ -562,6 +679,22 @@ type PrivateUser {
   product: String
   "The object type: 'user'"
   spotify_type: String
+  top_artists(
+    "The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example: `limit=2`"
+    limit: Int, 
+    "The index of the first entity to return. Default: 0 (i.e., the first track). Use with limit to get the next set of entities."
+    offset: Int, 
+    "Over what time frame the affinities are computed. Valid values: `long_term` (calculated from several years of data and including all new data as it becomes available), `medium_term` (approximately last 6 months), `short_term` (approximately last 4 weeks). Default: `medium_term`"
+    time_range: String
+  ): PagingArtist
+  top_tracks(
+    "The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example: `limit=2`"
+    limit: Int, 
+    "The index of the first entity to return. Default: 0 (i.e., the first track). Use with limit to get the next set of entities."
+    offset: Int, 
+    "Over what time frame the affinities are computed. Valid values: `long_term` (calculated from several years of data and including all new data as it becomes available), `medium_term` (approximately last 6 months), `short_term` (approximately last 4 weeks). Default: `medium_term`"
+    time_range: String
+  ): PagingTrack
   "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the user."
   uri: String
 }
@@ -653,6 +786,7 @@ type Query {
     "A timestamp in [ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601): `yyyy-MM-ddTHH:mm:ss`. Use this parameter to specify the user's local time to get results tailored for that specific date and time in the day. If not provided, the response defaults to the current UTC time. Example: \"2014-10-23T09:00:00\" for a user whose local time is 9AM. If there were no featured playlists (or there is no data) at the specified time, the response will revert to the current UTC time."
     timestamp: String
   ): FeaturedPlaylist
+  library: Library
   markets: [String]
   me: PrivateUser
   new_releases(
@@ -876,6 +1010,38 @@ type SaveShowsUserPayload {
 
 type SaveTracksUserPayload {
   status: Int
+}
+
+"[SavedAlbumObject](https://developer.spotify.com/documentation/web-api/reference/#object-savedalbumobject)"
+type SavedAlbum {
+  "The date and time the album was saved Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object."
+  added_at: String
+  "Information about the album."
+  album: Album
+}
+
+"[SavedEpisodeObject](https://developer.spotify.com/documentation/web-api/reference/#object-savedepisodeobject)"
+type SavedEpisode {
+  "The date and time the episode was saved. Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ."
+  added_at: String
+  "Information about the episode."
+  episode: Episode
+}
+
+"[SavedShowObject](https://developer.spotify.com/documentation/web-api/reference/#object-savedshowobject)"
+type SavedShow {
+  "The date and time the show was saved. Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object."
+  added_at: String
+  "Information about the show."
+  show: Show
+}
+
+"[SavedTrackObject](https://developer.spotify.com/documentation/web-api/reference/#object-savedtrackobject)"
+type SavedTrack {
+  "The date and time the track was saved. Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object."
+  added_at: String
+  "Information about the track."
+  track: Track
 }
 
 type SeekToPositionInCurrentlyPlayingTrackPayload {
