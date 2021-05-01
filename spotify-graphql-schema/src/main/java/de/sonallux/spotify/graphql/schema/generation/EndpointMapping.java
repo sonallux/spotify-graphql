@@ -49,7 +49,8 @@ class EndpointMapping {
         new EndpointMapping("category-library", "endpoint-get-users-saved-albums", "LibraryObject", "albums"),
         new EndpointMapping("category-library", "endpoint-get-users-saved-episodes", "LibraryObject", "episodes"),
         new EndpointMapping("category-library", "endpoint-get-users-saved-shows", "LibraryObject", "shows"),
-        new EndpointMapping("category-library", "endpoint-get-users-saved-tracks", "LibraryObject", "tracks")
+        new EndpointMapping("category-library", "endpoint-get-users-saved-tracks", "LibraryObject", "tracks"),
+        new EndpointMapping("category-search", "endpoint-search", "Query", "search")
 
     );
 

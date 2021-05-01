@@ -57,7 +57,7 @@ public class MutationEndpointLoader extends AbstractBatchLoader<SpotifyWebApiEnd
                         var paramValue = (String) input.get(parameter.getName());
                         urlBuilder.addQueryParameter(parameter.getName(), paramValue);
                     } else if (parameter.isRequired()) {
-                        throw getGraphQLErrorException("Missing required query parameter: " + parameter.getName());
+                        throw new IOException("Missing required query parameter: " + parameter.getName());
                     }
                 }
                 case BODY -> {
@@ -65,7 +65,7 @@ public class MutationEndpointLoader extends AbstractBatchLoader<SpotifyWebApiEnd
                         var paramValue = input.get(parameter.getName());
                         bodyParameters.put(parameter.getName(), paramValue);
                     } else if (parameter.isRequired()) {
-                        throw getGraphQLErrorException("Missing required body parameter: " + parameter.getName());
+                        throw new IOException("Missing required body parameter: " + parameter.getName());
                     }
                 }
             }
@@ -79,9 +79,6 @@ public class MutationEndpointLoader extends AbstractBatchLoader<SpotifyWebApiEnd
 
         try (var response = httpClient.request(requestBuilder.build())) {
             return Map.of("status", response.code());
-        }
-        catch (IOException e) {
-            throw getGraphQLErrorException(e);
         }
     }
 }

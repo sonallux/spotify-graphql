@@ -31,9 +31,13 @@ abstract class AbstractBatchLoader<K> implements BatchLoaderWithContext<K, Try<?
         return GraphqlErrorException.newErrorException().message(message).build();
     }
 
-    protected Request.Builder getRequestBuilder(BatchLoaderEnvironment environment) {
+    protected Request.Builder getRequestBuilder(BatchLoaderEnvironment environment) throws IOException {
         Map<String, String> context = environment.getContext();
-        return new Request.Builder().addHeader("Authorization", context.get("authorizationHeader"));
+        var authorizationHeaderValue = context.get("authorizationHeader");
+        if (authorizationHeaderValue.isBlank()) {
+            throw new IOException("Missing authorization");
+        }
+        return new Request.Builder().addHeader("Authorization", authorizationHeaderValue);
     }
 
     protected HttpUrl.Builder getUrlBuilder(BatchLoaderEnvironment environment) {

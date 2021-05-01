@@ -20,7 +20,7 @@ public class SpotifyDataLoaderRegistryFactory {
     public DataLoaderRegistry create(String authorizationHeader) {
         var dataLoaderOptions = DataLoaderOptions.newOptions()
             .setBatchLoaderContextProvider(() -> Map.of(
-                "authorizationHeader", authorizationHeader,
+                "authorizationHeader", authorizationHeader == null ? "" : authorizationHeader,
                 "baseUrl", spotifyWebApi.getEndpointUrl()
             ));
         Function<BatchLoaderWithContext<?, ?>, DataLoader<?, ?>> newDataLoader = batchLoader -> DataLoader.newDataLoader(batchLoader, dataLoaderOptions);

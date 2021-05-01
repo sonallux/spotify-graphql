@@ -60,7 +60,7 @@
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
 
         <!-- Dependencies -->
-        <spotify-web-api-core.version>2021.4.19</spotify-web-api-core.version>
+        <spotify-web-api-core.version>2021.5.1</spotify-web-api-core.version>
         <okhttp.version>4.9.1</okhttp.version>
         <guava.version>30.1.1-jre</guava.version>
         <spring-boot.version>2.4.5</spring-boot.version>

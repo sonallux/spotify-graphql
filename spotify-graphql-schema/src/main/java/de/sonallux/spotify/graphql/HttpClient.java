@@ -3,10 +3,12 @@ package de.sonallux.spotify.graphql;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
 import java.io.IOException;
 
+@Slf4j
 @AllArgsConstructor
 public class HttpClient {
     private static final MediaType JSON_MEDIA_TYPE = MediaType.get("application/json; charset=UTF-8");
@@ -19,6 +21,7 @@ public class HttpClient {
     }
 
     public Response request(Request request) throws IOException {
+        log.info("Executing request: {}", request.url());
         var response = httpClient.newCall(request).execute();
         if (response.isSuccessful()) {
             return response;

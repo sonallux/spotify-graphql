@@ -584,6 +584,24 @@ type PagingSavedTrack {
   total: Int
 }
 
+"[PagingShowObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
+type PagingShow {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested data."
+  items: [Show]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
 "[PagingTrackObject](https://developer.spotify.com/documentation/web-api/reference/#object-pagingobject)"
 type PagingTrack {
   "A link to the Web API endpoint returning the full result of the request"
@@ -904,6 +922,43 @@ type Query {
     target_valence: Float
   ): Recommendations
   recommendation_genres: [String]
+  search(
+    """
+    Possible values: *audio*   
+    If *include_external=audio* is specified the response will include any relevant audio content that is hosted externally.   
+    By default external content is filtered out from responses.
+    """
+    include_external: String, 
+    """
+    Maximum number of results to return.   
+    Default: 20   
+    Minimum: 1   
+    Maximum: 50   
+    **Note** : The limit is applied within each type, not on the total response.   
+    For example, if the limit value is 3 and the type is `artist,album`, the response contains 3 artists and 3 albums.
+    """
+    limit: Int, 
+    """
+    The index of the first result to return.   
+    Default: 0 (the first result).   
+    Maximum offset (including limit): 1,000.   
+    Use with limit to get the next page of search results.
+    """
+    offset: Int, 
+    """
+    Search [query](#writing-a-query---guidelines) keywords and optional field filters and operators.   
+    For example:   
+    `q=roadhouse%20blues`.
+    """
+    q: String!, 
+    """
+    A comma-separated list of item types to search across.   
+    Valid types are: `album` , `artist`, `playlist`, `track`, `show` and `episode`.   
+    Search results include hits from all the specified item types.   
+    For example: `q=name:abacab&type=album,track` returns both albums ***and*** tracks with "abacab" included in their name.
+    """
+    type: String!
+  ): SearchResponse
   show(
     "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
     id: String, 
@@ -1042,6 +1097,15 @@ type SavedTrack {
   added_at: String
   "Information about the track."
   track: Track
+}
+
+type SearchResponse {
+  albums: PagingAlbum
+  artists: PagingArtist
+  episodes: PagingEpisode
+  playlists: PagingPlaylist
+  shows: PagingShow
+  tracks: PagingTrack
 }
 
 type SeekToPositionInCurrentlyPlayingTrackPayload {
@@ -1276,8 +1340,11 @@ input removeEpisodesUserInput {
 }
 
 input removeShowsUserInput {
-  "A comma-separated list of Spotify IDs for the shows to be deleted from the user's library."
-  ids: String!
+  """
+  A JSON array of the [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids).  
+  A maximum of 50 items can be specified in one request. *Note: if the `ids` parameter is present in the query string, any IDs listed here in the body will be ignored.*
+  """
+  ids: [String]!
   """
   An [ISO 3166-1 alpha-2 country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). If a country code is specified, only shows that are available in that market will be removed.  
   If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.  
@@ -1355,8 +1422,11 @@ input saveEpisodesUserInput {
 }
 
 input saveShowsUserInput {
-  "A comma-separated list of the [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids). Maximum: 50 IDs."
-  ids: String!
+  """
+  A JSON array of the [Spotify IDs](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids).  
+  A maximum of 50 items can be specified in one request. *Note: if the `ids` parameter is present in the query string, any IDs listed here in the body will be ignored.*
+  """
+  ids: [String]!
 }
 
 input saveTracksUserInput {
