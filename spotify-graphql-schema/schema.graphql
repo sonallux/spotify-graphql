@@ -69,6 +69,8 @@ type Album {
   restrictions: AlbumRestriction
   "The object type: 'album'"
   spotify_type: String
+  "The total number of tracks in the album."
+  total_tracks: Int
   "The tracks of the album."
   tracks(
     "The maximum number of tracks to return. Default: 20. Minimum: 1. Maximum: 50."
@@ -1009,7 +1011,7 @@ type RecommendationSeed {
 type Recommendations {
   "An array of [recommendation seed objects](https://developer.spotify.com/documentation/web-api/reference/#object-recommendationseedobject)."
   seeds: [RecommendationSeed]
-  "An array of [track object (simplified)](https://developer.spotify.com/documentation/web-api/reference/#object-simplifiedtrackobject) ordered according to the parameters supplied."
+  "An array of [track object](https://developer.spotify.com/documentation/web-api/reference/#object-trackobject) ordered according to the parameters supplied."
   tracks: [Track]
 }
 
@@ -1040,6 +1042,7 @@ type ReorderPlaylistsTracksPayload {
 }
 
 type ReplacePlaylistsTracksPayload {
+  snapshot_id: SnapshotId
   status: Int
 }
 
@@ -1126,7 +1129,7 @@ type Show {
   available_markets: [String]
   "The copyright statements of the show."
   copyrights: [Copyright]
-  "A description of the show."
+  "A description of the show. HTML tags are stripped away from this field, use `html_description` field in case HTML tags are needed."
   description: String
   "A list of the show's episodes."
   episodes(
@@ -1141,6 +1144,8 @@ type Show {
   external_urls: ExternalUrl
   "A link to the Web API endpoint providing full details of the show."
   href: String
+  "A description of the show. This field may contain HTML tags."
+  html_description: String
   "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the show."
   id: String
   "The cover art for the show in various sizes, widest first."
@@ -1314,7 +1319,7 @@ input followArtistsUsersInput {
 input followPlaylistInput {
   "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) of the playlist. Any playlist can be followed, regardless of its [public/private status](https://developer.spotify.com/documentation/general/guides/working-with-playlists/#public-private-and-collaborative-status), as long as you know its playlist ID."
   playlist_id: String!
-  "Defaults to `true`. If `true` the playlist will be included in user's public playlists, if `false` it will remain private. To be able to follow playlists privately, the user must have granted the `playlist-modify-private` [scope](https://developer.spotify.com/documentation/general/guides/authorization-guide/#list-of-scopes)."
+  "Defaults to `true`. If `true` the playlist will be included in user's public playlists, if `false` it will remain private."
   public: Boolean
 }
 
