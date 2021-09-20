@@ -66,7 +66,7 @@
         <spring-boot.version>2.5.2</spring-boot.version>
         <graphql-java-kickstart.version>11.1.0</graphql-java-kickstart.version>
         <lombok.version>1.18.20</lombok.version>
-        <graphql-java.version>16.2</graphql-java.version>
+        <graphql-java.version>17.3</graphql-java.version>
 
         <!-- Test Dependencies -->
     </properties>
