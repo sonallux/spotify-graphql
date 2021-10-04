@@ -61,7 +61,7 @@
 
         <!-- Dependencies -->
         <spotify-web-api-core.version>2021.6.30</spotify-web-api-core.version>
-        <okhttp.version>4.9.1</okhttp.version>
+        <okhttp.version>4.9.2</okhttp.version>
         <guava.version>30.1.1-jre</guava.version>
         <spring-boot.version>2.5.2</spring-boot.version>
         <graphql-java-kickstart.version>11.1.0</graphql-java-kickstart.version>
