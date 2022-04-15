@@ -28,7 +28,7 @@ public class BaseObjectsDataFetcher implements DataFetcher<Object> {
                 .map(uri -> {
                     if (!type.equals(SpotifyUtil.getTypeFromUri(uri))) {
                         throw newErrorException()
-                            .message("Expected a 'uri' of type '" + type + "' but got 'uri' " + uri)
+                            .message("Expected a 'uri' of type '" + type + "' but got '" + uri + "'")
                             .build();
                     }
                     var id = SpotifyUtil.getIdFromUri(uri);

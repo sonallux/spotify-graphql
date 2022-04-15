@@ -17,15 +17,8 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
-          distribution: adopt
-          java-version: 16
-      - name: Cache .m2 repository
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.m2/repository
-            ~/.m2/wrapper
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven-
+          distribution: zulu
+          java-version: 17
+          cache: 'maven'
       - name: Package
         run: ./mvnw -B package

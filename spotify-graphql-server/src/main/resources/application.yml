@@ -3,6 +3,9 @@ spring:
     name: Spotify GraphQL
   config:
     import: optional:classpath:spotify-secrets.yml
+  graphql:
+    graphiql:
+      enabled: true
   security:
     oauth2:
       client:
@@ -30,13 +33,3 @@ spring:
             token-uri: https://accounts.spotify.com/api/token
             user-info-uri: https://api.spotify.com/v1/me
             user-name-attribute: id
-
-graphql:
-  playground:
-    settings:
-      schema:
-        polling:
-          interval: 60000
-          enable: false
-      request:
-        credentials: same_origin
