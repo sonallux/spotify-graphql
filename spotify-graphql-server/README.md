@@ -3,7 +3,10 @@
 [![Maven Central](https://img.shields.io/maven-central/v/de.sonallux.spotify/spotify-graphql-server)](https://search.maven.org/search?q=g:%22de.sonallux.spotify%22%20AND%20a:%22spotify-graphql-server%22)
 [![GitHub](https://img.shields.io/github/license/sonallux/spotify-graphql)](https://github.com/sonallux/spotify-graphql/blob/master/LICENSE)
 
-A Spotify GraphQL Server using Spring Boot and [GraphQL Java Kickstart](https://www.graphql-java-kickstart.com/spring-boot). As frontend [GraphQL Playground](https://github.com/graphql/graphql-playground) is used.
+A GraphQl server for Spotify's Web Api.
+ 
+### :construction: Status of the Project
+The old implementation using [GraphQL Java Kickstart](https://www.graphql-java-kickstart.com/spring-boot) is currently rewritten based on the new official [Spring GraphQL Project](https://spring.io/projects/spring-graphql).
 
 ### Configuration
 To run the Spotify GraphQL server a valid client id and client secret must be obtained by registering your application on the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).

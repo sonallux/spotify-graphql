@@ -4,10 +4,7 @@ import de.sonallux.spotify.core.model.SpotifyWebApi;
 import de.sonallux.spotify.graphql.HttpClient;
 import de.sonallux.spotify.graphql.schema.loader.*;
 import lombok.AllArgsConstructor;
-import org.dataloader.BatchLoaderWithContext;
-import org.dataloader.DataLoader;
-import org.dataloader.DataLoaderOptions;
-import org.dataloader.DataLoaderRegistry;
+import org.dataloader.*;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -23,7 +20,7 @@ public class SpotifyDataLoaderRegistryFactory {
                 "authorizationHeader", authorizationHeader == null ? "" : authorizationHeader,
                 "baseUrl", spotifyWebApi.getEndpointUrl()
             ));
-        Function<BatchLoaderWithContext<?, ?>, DataLoader<?, ?>> newDataLoader = batchLoader -> DataLoader.newDataLoader(batchLoader, dataLoaderOptions);
+        Function<BatchLoaderWithContext<?, ?>, DataLoader<?, ?>> newDataLoader = batchLoader -> DataLoaderFactory.newDataLoader(batchLoader, dataLoaderOptions);
 
         var dataloaderRegistry = new DataLoaderRegistry();
         dataloaderRegistry
