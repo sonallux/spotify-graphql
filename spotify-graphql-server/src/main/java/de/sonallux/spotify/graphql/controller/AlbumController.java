@@ -3,6 +3,7 @@ package de.sonallux.spotify.graphql.controller;
 import org.dataloader.DataLoader;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
@@ -24,5 +25,10 @@ public class AlbumController extends BaseController {
                                            DataLoader<String, Map<String, Object>> albumLoader
     ) {
         return loadMany(ids, uris, "album", albumLoader);
+    }
+
+    @SchemaMapping(typeName = "Album")
+    Mono<Map<String, Object>> tracks(Map<String, Object> album, @Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
+        return loadPagingObject(album, arguments, "tracks", rawLoader);
     }
 }

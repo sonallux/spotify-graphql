@@ -5,9 +5,11 @@ import org.dataloader.DataLoader;
 import org.springframework.lang.Nullable;
 import reactor.core.publisher.Mono;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
 abstract class BaseController {
 
@@ -21,6 +23,29 @@ abstract class BaseController {
                                              DataLoader<String, Map<String, Object>> dataloader) {
         return Mono.fromSupplier(() -> extractSpotifyIds(ids, uris, type))
             .flatMap(actualIds -> Mono.fromFuture(dataloader.loadMany(actualIds)));
+    }
+
+    Mono<Map<String, Object>> loadPagingObject(Map<String, Object> parentObject, Map<String, Object> arguments,
+                                               String property, DataLoader<String, Map<String, Object>> rawLoader) {
+        var id = (String) parentObject.get("id");
+        var parentType = (String) parentObject.get("type");
+
+        var limitArgument = (Integer) arguments.get("limit");
+        var offsetArgument = (Integer) arguments.get("offset");
+
+        var existingPagingObject = (Map<String, Object>)parentObject.get(property);
+        if (existingPagingObject != null && arePagingArgumentsMatch(existingPagingObject, limitArgument, offsetArgument)) {
+            return Mono.just(existingPagingObject);
+        }
+
+        return Mono.fromFuture(rawLoader.load(String.format("/%ss/%s/%s?limit=%s&offset=%s", parentType, id, property, limitArgument, offsetArgument)));
+    }
+
+    private boolean arePagingArgumentsMatch(Map<String, Object> pagingObject, int limitArgument, int offsetArgument) {
+        var limit = (Integer) pagingObject.get("limit");
+        var offset = (Integer) pagingObject.get("offset");
+
+        return Objects.equals(limit, limitArgument) && Objects.equals(offset, offsetArgument);
     }
 
     String extractSpotifyId(@Nullable String id, @Nullable String uri, String type) {

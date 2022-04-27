@@ -42,6 +42,9 @@ public class BatchLoaders {
             queryBaseObjects("shows", 50, ids));
         batchLoaderRegistry.<String, Map<String, Object>>forName("trackLoader").registerBatchLoader((ids, env) ->
             queryBaseObjects("tracks", 50, ids));
+
+        batchLoaderRegistry.<String, Map<String, Object>>forName("rawLoader").registerBatchLoader((urls, env) ->
+            queryUrls(urls));
     }
 
     private Flux<Map<String, Object>> queryBaseObjects(String type, int maxIdsPerQuery, List<String> ids) {
@@ -57,6 +60,12 @@ public class BatchLoaders {
                 .queryParam("additional_types", "track,episode")
                 .build())
                 .doOnSubscribe(ignore -> log.info("Querying playlist: {}", id)));
+    }
+
+    private Flux<Map<String, Object>> queryUrls(List<String> urls) {
+        return Flux.fromIterable(urls)
+            .flatMapSequential(url -> requestObject(uriBuilder -> URI.create(uriBuilder.build() + url))
+                .doOnSubscribe(ignore -> log.info("Query raw url: {}", url)));
     }
 
     private Flux<Map<String, Object>> requestObjects(String type, List<String> ids) {
