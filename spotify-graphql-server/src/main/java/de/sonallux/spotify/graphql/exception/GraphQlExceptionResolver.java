@@ -30,6 +30,14 @@ public class GraphQlExceptionResolver implements DataFetcherExceptionResolver {
                 .build()
             ));
         }
+        else if (exception instanceof ObjectNotFoundException) {
+            return Mono.just(List.of(GraphqlErrorBuilder
+                .newError(environment)
+                .message(exception.getMessage())
+                .errorType(ErrorType.NOT_FOUND)
+                .build()
+            ));
+        }
         return Mono.empty();
     }
 }

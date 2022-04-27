@@ -1,6 +1,7 @@
 package de.sonallux.spotify.graphql.loaders;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Streams;
 import de.sonallux.spotify.graphql.AuthenticationGraphQlInterceptor;
 import de.sonallux.spotify.graphql.exception.MissingAuthorizationException;
 import de.sonallux.spotify.graphql.exception.ObjectNotFoundException;
@@ -17,6 +18,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -81,9 +83,25 @@ public class BatchLoaders {
                 .header(HttpHeaders.AUTHORIZATION, spotifyAuthorization)
                 .retrieve()
                 .bodyToMono(OBJECTS_RESPONSE_TYPE)
-            ).flatMapMany(responseBody -> Flux.fromStream(responseBody.get(type).stream()
-                .map(object -> object == null ? Try.failed(new ObjectNotFoundException()) : Try.succeeded(object)))
-            );
+            ).flatMapMany(response -> mapResponse(response, type, ids));
+    }
+
+    private Flux<Try<Map<String, Object>>> mapResponse(Map<String, List<Map<String, Object>>> response, String type, List<String> ids) {
+        var objects = response.get(type);
+        if (objects.size() != ids.size()) {
+            return Flux.error(() -> new RuntimeException(String.format("The %s response contains the wrong number of objects. expected %s but got %s", type, ids.size(), objects.size())));
+        }
+
+        var result = new ArrayList<Try<Map<String, Object>>>(ids.size());
+        for (int i = 0; i < ids.size(); i++) {
+            var object = objects.get(i);
+            if (object == null) {
+                result.add(Try.failed(new ObjectNotFoundException(String.format("%s object with id '%s' not found", type, ids.get(i)))));
+            } else {
+                result.add(Try.succeeded(object));
+            }
+        }
+        return Flux.fromIterable(result);
     }
 
     private Mono<Map<String, Object>> requestObject(Function<UriBuilder, URI> uriFunction) {
