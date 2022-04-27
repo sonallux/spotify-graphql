@@ -14,8 +14,8 @@ spring:
             # You must register your application on the Spotify Developer Dashboard (https://developer.spotify.com/dashboard).
             # After successful registration you obtain the required client id and client secret.
             # If you do not want to commit these values, put the in a git ignored spotify-secrets.yml file (recommended).
-            # client-id: ???
-            # client-secret: ???
+            client-id: unknown
+            client-secret: unknown
             authorization-grant-type: authorization_code
             redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
             scope:
