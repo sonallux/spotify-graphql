@@ -1,49 +1,19 @@
 package de.sonallux.spotify.graphql.controller;
 
-import de.sonallux.spotify.graphql.MockWebServerJUnitExtension;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.graphql.test.tester.GraphQlTester;
-import org.springframework.graphql.test.tester.WebGraphQlTester;
-import org.springframework.graphql.web.WebGraphQlHandler;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(properties = "spotify.base-url=http://localhost:" + MockWebServerJUnitExtension.PORT)
-@ExtendWith(MockWebServerJUnitExtension.class)
-class AlbumControllerTest {
-    @Autowired
-    WebGraphQlHandler webGraphQlHandler;
-
-    GraphQlTester graphQlTester;
-
-    MockWebServer mockWebServer;
-
-    @BeforeEach
-    void setUp() {
-        graphQlTester = WebGraphQlTester
-            .builder(webGraphQlHandler)
-            .header(HttpHeaders.AUTHORIZATION, "spotify_test_auth_token")
-            .build();
-    }
+class AlbumControllerTest extends BaseControllerTest {
 
     @Test
     void multipleAlbumsAreLoaded() throws InterruptedException {
-        mockWebServer.enqueue(new MockResponse()
-            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .setBody("""
-                {"albums": [
-                    {"id": "foo", "type": "album", "name": "Foo Name"},
-                    {"id": "bar", "type": "album", "name": "Bar Name"}
-                ]}
-                """)
+        mockWebServer.enqueue(createJsonResponse("""
+            {"albums": [
+                {"id": "foo", "type": "album", "name": "Foo Name"},
+                {"id": "bar", "type": "album", "name": "Bar Name"}
+            ]}
+            """)
         );
 
         graphQlTester.document("""
@@ -61,24 +31,20 @@ class AlbumControllerTest {
 
     @Test
     void missingArtistsPropertiesAreLoaded() throws Exception {
-        mockWebServer.enqueue(new MockResponse()
-            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .setBody("""
-                {"albums": [
-                    {"id": "foo", "type": "album", "name": "Bar", "artists":[
-                        {"id": "test", "type": "artist", "name": "Test Artist"}
-                    ]}
+        mockWebServer.enqueue(createJsonResponse("""
+            {"albums": [
+                {"id": "foo", "type": "album", "name": "Bar", "artists":[
+                    {"id": "test", "type": "artist", "name": "Test Artist"}
                 ]}
-                """)
+            ]}
+            """)
         );
 
-        mockWebServer.enqueue(new MockResponse()
-            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .setBody("""
-                {"artists": [
-                    {"id": "test", "type": "artist", "name": "Test Artist", "popularity": 42}
-                ]}
-                """)
+        mockWebServer.enqueue(createJsonResponse("""
+            {"artists": [
+                {"id": "test", "type": "artist", "name": "Test Artist", "popularity": 42}
+            ]}
+            """)
         );
 
         graphQlTester.document("""
@@ -100,15 +66,13 @@ class AlbumControllerTest {
 
     @Test
     void existingTracksPropertyIsUsedIfPagingArgumentsAreMissing() throws Exception {
-        mockWebServer.enqueue(new MockResponse()
-            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .setBody("""
-                {"albums": [
-                    {"id": "foo", "type": "album", "tracks": {
-                        "total": 5, "limit": 20, "offset": 0
-                    }}
-                ]}
-                """)
+        mockWebServer.enqueue(createJsonResponse("""
+            {"albums": [
+                {"id": "foo", "type": "album", "tracks": {
+                    "total": 5, "limit": 20, "offset": 0
+                }}
+            ]}
+            """)
         );
 
         graphQlTester.document("""
@@ -128,15 +92,13 @@ class AlbumControllerTest {
 
     @Test
     void existingTracksPropertyIsUsedIfPagingArgumentsAreEqual() throws Exception {
-        mockWebServer.enqueue(new MockResponse()
-            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .setBody("""
-                {"albums": [
-                    {"id": "foo", "type": "album", "tracks": {
-                        "total": 5, "limit": 20, "offset": 20
-                    }}
-                ]}
-                """)
+        mockWebServer.enqueue(createJsonResponse("""
+            {"albums": [
+                {"id": "foo", "type": "album", "tracks": {
+                    "total": 5, "limit": 20, "offset": 20
+                }}
+            ]}
+            """)
         );
 
         graphQlTester.document("""
@@ -156,24 +118,20 @@ class AlbumControllerTest {
 
     @Test
     void tracksPropertyIsLoadedIfPagingArgumentsDoNotMatch() throws Exception {
-        mockWebServer.enqueue(new MockResponse()
-            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .setBody("""
-                {"albums": [
-                    {"id": "foo", "type": "album", "tracks": {
-                        "total": 25, "limit": 20, "offset": 0, "items": [{"id": "foo"}]
-                    }}
-                ]}
-                """)
+        mockWebServer.enqueue(createJsonResponse("""
+            {"albums": [
+                {"id": "foo", "type": "album", "tracks": {
+                    "total": 25, "limit": 20, "offset": 0, "items": [{"id": "foo"}]
+                }}
+            ]}
+            """)
         );
 
-        mockWebServer.enqueue(new MockResponse()
-            .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .setBody("""
-                {"total": 55, "limit": 50, "offset": 50, "items": [
-                    {"id": "track-id"}
-                ]}
-                """)
+        mockWebServer.enqueue(createJsonResponse("""
+            {"total": 55, "limit": 50, "offset": 50, "items": [
+                {"id": "track-id"}
+            ]}
+            """)
         );
 
         graphQlTester.document("""
