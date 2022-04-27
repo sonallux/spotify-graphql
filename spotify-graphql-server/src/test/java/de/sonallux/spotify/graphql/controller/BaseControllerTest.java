@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.graphql.test.tester.WebGraphQlTester;
-import org.springframework.graphql.web.WebGraphQlHandler;
+import org.springframework.graphql.server.WebGraphQlHandler;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 

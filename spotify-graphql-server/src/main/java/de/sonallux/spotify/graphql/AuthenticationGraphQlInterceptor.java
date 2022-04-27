@@ -1,9 +1,9 @@
 package de.sonallux.spotify.graphql;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.graphql.web.WebGraphQlHandlerInterceptor;
-import org.springframework.graphql.web.WebGraphQlRequest;
-import org.springframework.graphql.web.WebGraphQlResponse;
+import org.springframework.graphql.server.WebGraphQlInterceptor;
+import org.springframework.graphql.server.WebGraphQlRequest;
+import org.springframework.graphql.server.WebGraphQlResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
@@ -18,7 +18,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationGraphQlHandlerInterceptor implements WebGraphQlHandlerInterceptor {
+public class AuthenticationGraphQlInterceptor implements WebGraphQlInterceptor {
     public static final String SPOTIFY_AUTHORIZATION_CONTEXT_KEY = "spotify_authorization";
 
     private final ReactiveOAuth2AuthorizedClientService oAuth2AuthorizedClientService;

@@ -1,9 +1,11 @@
 package de.sonallux.spotify.graphql.loaders;
 
 import com.google.common.collect.Lists;
-import de.sonallux.spotify.graphql.AuthenticationGraphQlHandlerInterceptor;
+import de.sonallux.spotify.graphql.AuthenticationGraphQlInterceptor;
 import de.sonallux.spotify.graphql.exception.MissingAuthorizationException;
+import de.sonallux.spotify.graphql.exception.ObjectNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.dataloader.Try;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.graphql.execution.BatchLoaderRegistry;
 import org.springframework.http.HttpHeaders;
@@ -30,24 +32,24 @@ public class BatchLoaders {
     public BatchLoaders(WebClient webClient, BatchLoaderRegistry batchLoaderRegistry) {
         this.webClient = webClient;
 
-        batchLoaderRegistry.<String, Map<String, Object>>forName("albumLoader").registerBatchLoader((ids, env) ->
+        batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("albumLoader").registerBatchLoader((ids, env) ->
             queryBaseObjects("albums", 20, ids));
-        batchLoaderRegistry.<String, Map<String, Object>>forName("artistLoader").registerBatchLoader((ids, env) ->
+        batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("artistLoader").registerBatchLoader((ids, env) ->
             queryBaseObjects("artists", 50, ids));
-        batchLoaderRegistry.<String, Map<String, Object>>forName("episodeLoader").registerBatchLoader((ids, env) ->
+        batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("episodeLoader").registerBatchLoader((ids, env) ->
             queryBaseObjects("episodes", 50, ids));
         batchLoaderRegistry.<String, Map<String, Object>>forName("playlistLoader").registerBatchLoader((ids, env) ->
             queryPlaylists(ids));
-        batchLoaderRegistry.<String, Map<String, Object>>forName("showLoader").registerBatchLoader((ids, env) ->
+        batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("showLoader").registerBatchLoader((ids, env) ->
             queryBaseObjects("shows", 50, ids));
-        batchLoaderRegistry.<String, Map<String, Object>>forName("trackLoader").registerBatchLoader((ids, env) ->
+        batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("trackLoader").registerBatchLoader((ids, env) ->
             queryBaseObjects("tracks", 50, ids));
 
         batchLoaderRegistry.<String, Map<String, Object>>forName("rawLoader").registerBatchLoader((urls, env) ->
             queryUrls(urls));
     }
 
-    private Flux<Map<String, Object>> queryBaseObjects(String type, int maxIdsPerQuery, List<String> ids) {
+    private Flux<Try<Map<String, Object>>> queryBaseObjects(String type, int maxIdsPerQuery, List<String> ids) {
         return Flux.fromIterable(Lists.partition(ids, maxIdsPerQuery))
             .flatMapSequential(subList -> requestObjects(type, subList)
                 .doOnSubscribe(ignore -> log.info("Querying {}: {}", type, StringUtils.collectionToCommaDelimitedString(subList))));
@@ -68,7 +70,7 @@ public class BatchLoaders {
                 .doOnSubscribe(ignore -> log.info("Query raw url: {}", url)));
     }
 
-    private Flux<Map<String, Object>> requestObjects(String type, List<String> ids) {
+    private Flux<Try<Map<String, Object>>> requestObjects(String type, List<String> ids) {
         return getSpotifyAuthorization()
             .flatMap(spotifyAuthorization -> webClient
                 .get()
@@ -79,7 +81,9 @@ public class BatchLoaders {
                 .header(HttpHeaders.AUTHORIZATION, spotifyAuthorization)
                 .retrieve()
                 .bodyToMono(OBJECTS_RESPONSE_TYPE)
-            ).flatMapIterable(object -> object.get(type));
+            ).flatMapMany(responseBody -> Flux.fromStream(responseBody.get(type).stream()
+                .map(object -> object == null ? Try.failed(new ObjectNotFoundException()) : Try.succeeded(object)))
+            );
     }
 
     private Mono<Map<String, Object>> requestObject(Function<UriBuilder, URI> uriFunction) {
@@ -95,7 +99,7 @@ public class BatchLoaders {
 
     private Mono<String> getSpotifyAuthorization() {
         return Mono.deferContextual(Mono::just)
-            .flatMap(context -> Mono.justOrEmpty(context.<String>getOrEmpty(AuthenticationGraphQlHandlerInterceptor.SPOTIFY_AUTHORIZATION_CONTEXT_KEY)))
+            .flatMap(context -> Mono.justOrEmpty(context.<String>getOrEmpty(AuthenticationGraphQlInterceptor.SPOTIFY_AUTHORIZATION_CONTEXT_KEY)))
             .switchIfEmpty(Mono.error(new MissingAuthorizationException("Missing authorization for spotify")));
     }
 }
