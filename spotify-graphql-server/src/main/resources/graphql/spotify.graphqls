@@ -74,7 +74,7 @@ type Album {
     "The tracks of the album."
     tracks(
         "The maximum number of tracks to return. Default: 20. Minimum: 1. Maximum: 50."
-        limit: Int = 20,
+        limit: Int = 50,
         "The index of the first track to return. Default: 0 (the first object). Use with limit to get the next set of tracks."
         offset: Int = 0
     ): PagingTrack
@@ -108,9 +108,9 @@ type Artist {
         """
         include_groups: String,
         "The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50. For example: `limit=2`"
-        limit: Int,
+        limit: Int = 50,
         "The index of the first album to return. Default: 0 (i.e., the first album). Use with `limit` to get the next set of albums."
-        offset: Int
+        offset: Int = 0
     ): PagingAlbum
     "Known external URLs for this artist."
     external_urls: ExternalUrl

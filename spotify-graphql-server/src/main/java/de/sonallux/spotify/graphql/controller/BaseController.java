@@ -5,11 +5,10 @@ import org.dataloader.DataLoader;
 import org.springframework.lang.Nullable;
 import reactor.core.publisher.Mono;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
 abstract class BaseController {
 
@@ -34,11 +33,11 @@ abstract class BaseController {
         var offsetArgument = (Integer) arguments.get("offset");
 
         var existingPagingObject = (Map<String, Object>)parentObject.get(property);
-        if (existingPagingObject != null && arePagingArgumentsMatch(existingPagingObject, limitArgument, offsetArgument)) {
+        if (existingPagingObject != null && arguments.size() == 2 && arePagingArgumentsMatch(existingPagingObject, limitArgument, offsetArgument)) {
             return Mono.just(existingPagingObject);
         }
 
-        return Mono.fromFuture(rawLoader.load(String.format("/%ss/%s/%s?limit=%s&offset=%s", parentType, id, property, limitArgument, offsetArgument)));
+        return Mono.fromFuture(rawLoader.load(String.format("/%ss/%s/%s%s", parentType, id, property, argumentsFromQueryString(arguments))));
     }
 
     private boolean arePagingArgumentsMatch(Map<String, Object> pagingObject, int limitArgument, int offsetArgument) {
@@ -46,6 +45,15 @@ abstract class BaseController {
         var offset = (Integer) pagingObject.get("offset");
 
         return Objects.equals(limit, limitArgument) && Objects.equals(offset, offsetArgument);
+    }
+
+    private String argumentsFromQueryString(Map<String, Object> arguments) {
+        if (arguments.isEmpty()) {
+            return "";
+        }
+        return "?" + arguments.entrySet().stream()
+            .map(e -> e.getKey() + "=" + e.getValue())
+            .collect(Collectors.joining("&"));
     }
 
     String extractSpotifyId(@Nullable String id, @Nullable String uri, String type) {
