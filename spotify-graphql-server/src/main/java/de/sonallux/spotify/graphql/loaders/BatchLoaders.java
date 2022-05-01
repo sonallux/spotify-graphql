@@ -1,8 +1,7 @@
 package de.sonallux.spotify.graphql.loaders;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Streams;
-import de.sonallux.spotify.graphql.AuthenticationGraphQlInterceptor;
+import de.sonallux.spotify.graphql.security.AuthenticationGraphQlInterceptor;
 import de.sonallux.spotify.graphql.exception.MissingAuthorizationException;
 import de.sonallux.spotify.graphql.exception.ObjectNotFoundException;
 import lombok.extern.slf4j.Slf4j;

@@ -1,0 +1,88 @@
+<html lang="en">
+<head>
+    <title>GraphQL API for Spotify</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            height: 100%;
+        }
+
+        .header {
+            height: 34px;
+            display: flex;
+            background-color: rgb(247, 247, 247);
+            border-bottom: 1px solid rgba(0,0,0,.2);
+            padding: 7px 14px;
+            align-items: center;
+        }
+
+        .header .title {
+            flex: 1 1 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .header .buttons button {
+            height: 30px;
+            font-size: 14px;
+        }
+
+        .graphiql {
+            flex: 1 1 0;
+        }
+
+        .graphiql iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script type="application/javascript">
+        function checkLogin() {
+            fetch('/account').then(response => {
+                const loginButton = document.querySelector('#login-button');
+                const logoutButton = document.querySelector('#logout-button');
+                if (response.status === 200) {
+                    loginButton.classList.add('hidden')
+                    logoutButton.classList.remove('hidden')
+                } else {
+                    loginButton.classList.remove('hidden')
+                    logoutButton.classList.add('hidden')
+                }
+            })
+        }
+
+        function login() {
+            window.location.href = '/oauth2/authorization/spotify'
+        }
+
+        function logout() {
+            fetch('/logout', {method: 'POST'}).then(() => checkLogin());
+        }
+
+        window.addEventListener('focus', checkLogin);
+        checkLogin();
+    </script>
+</head>
+
+<body>
+<div class="header">
+    <span class="title">GraphQL API for Spotify</span>
+    <div class="buttons">
+        <button id="login-button" onclick="login()" class="hidden">Login with Spotify</button>
+        <button id="logout-button" onclick="logout()" class="hidden">Logout</button>
+    </div>
+
+</div>
+<div class="graphiql">
+<iframe src="/graphiql"></iframe>
+</div>
+</body>
+</html>
