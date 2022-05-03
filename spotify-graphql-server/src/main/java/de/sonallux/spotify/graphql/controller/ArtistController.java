@@ -31,4 +31,18 @@ public class ArtistController extends BaseController {
     Mono<Map<String, Object>> albums(Map<String, Object> artist, @Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
         return loadPagingObject(artist, arguments, "albums", rawLoader);
     }
+
+    @SchemaMapping(typeName = "Artist", field = "related_artists")
+    Mono<List<Map<String, Object>>> relatedArtists(Map<String, Object> artist, DataLoader<String, Map<String, Object>> rawLoader) {
+        var id = (String) artist.get("id");
+        return Mono.fromFuture(rawLoader.load(String.format("/artists/%s/related-artists", id)))
+            .map(result -> (List<Map<String, Object>>)result.get("artists"));
+    }
+
+    @SchemaMapping(typeName = "Artist", field = "top_tracks")
+    Mono<List<Map<String, Object>>> topTracks(Map<String, Object> artist, DataLoader<String, Map<String, Object>> rawLoader) {
+        var id = (String) artist.get("id");
+        return Mono.fromFuture(rawLoader.load(String.format("/artists/%s/top-tracks?market=from_token", id)))
+            .map(result -> (List<Map<String, Object>>)result.get("tracks"));
+    }
 }
