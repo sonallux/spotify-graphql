@@ -3,6 +3,8 @@ spring:
     name: Spotify GraphQL
   config:
     import: optional:classpath:spotify-secrets.yml
+  codec:
+    max-in-memory-size: 1MB
   graphql:
     graphiql:
       enabled: true

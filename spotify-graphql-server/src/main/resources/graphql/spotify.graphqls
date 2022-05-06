@@ -1,27 +1,3 @@
-"Directs the executor to include this field or fragment only when the `if` argument is true"
-directive @include(
-    "Included when true."
-    if: Boolean!
-) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
-
-"Directs the executor to skip this field or fragment when the `if`'argument is true."
-directive @skip(
-    "Skipped when true."
-    if: Boolean!
-) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
-
-"Marks the field or enum value as deprecated"
-directive @deprecated(
-    "The reason for the deprecation"
-    reason: String = "No longer supported"
-) on FIELD_DEFINITION | ENUM_VALUE
-
-"Exposes a URL that specifies the behaviour of this scalar."
-directive @specifiedBy(
-    "The URL that specifies the behaviour of this scalar."
-    url: String!
-) on SCALAR
-
 union UnionTrackEpisode = Episode | Track
 
 type AddToQueuePayload {
@@ -645,7 +621,7 @@ type Playlist {
     "The name of the playlist."
     name: String
     "The user who owns the playlist"
-    owner: PublicUser
+    owner: PlaylistOwner
     "The playlist's public/private status: `true` the playlist is public, `false` the playlist is private, `null` the playlist status is not relevant. For more about public/private status, see [Working with Playlists](https://developer.spotify.com/documentation/general/guides/working-with-playlists/)"
     public: Boolean
     "The version identifier for the current playlist. Can be supplied in other requests to target a specific playlist version"
@@ -655,11 +631,43 @@ type Playlist {
     "Information about the tracks of the playlist. Note, a track object may be `null`. This can happen if a track is no longer available."
     tracks(
         "The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100."
-        limit: Int,
+        limit: Int = 100,
         "The index of the first item to return. Default: 0 (the first object)."
-        offset: Int
+        offset: Int = 0
     ): PagingPlaylistTrack
     "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the playlist."
+    uri: String
+}
+
+type PlaylistOwner {
+    "The name displayed on the user's profile. `null` if not available."
+    display_name: String
+    "Known external URLs for this user."
+    external_urls: ExternalUrl
+    "Information about the followers of the user."
+    followers: Followers
+    "A link to the Web API endpoint for this user."
+    href: String
+    "The [Spotify user ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the user."
+    id: String
+    "The object type: 'user'"
+    spotify_type: String
+    "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for this user."
+    uri: String
+}
+
+type PlaylistUser {
+    "Known external URLs for this user."
+    external_urls: ExternalUrl
+    "Information about the followers of the user."
+    followers: Followers
+    "A link to the Web API endpoint for this user."
+    href: String
+    "The [Spotify user ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the user."
+    id: String
+    "The object type: 'user'"
+    spotify_type: String
+    "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for this user."
     uri: String
 }
 
@@ -668,7 +676,7 @@ type PlaylistTrack {
     "The date and time the track or episode was added. *Note that some very old playlists may return `null` in this field.*"
     added_at: String
     "The Spotify user who added the track or episode. *Note that some very old playlists may return `null` in this field.*"
-    added_by: PublicUser
+    added_by: PlaylistUser
     "Whether this track or episode is a [local file](https://developer.spotify.com/web-api/local-files-spotify-playlists/) or not."
     is_local: Boolean
     "Information about the track or episode."

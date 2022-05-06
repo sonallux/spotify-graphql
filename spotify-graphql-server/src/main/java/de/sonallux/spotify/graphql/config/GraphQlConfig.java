@@ -13,8 +13,8 @@ public class GraphQlConfig {
     private String spotifyBaseUrl;
 
     @Bean
-    public WebClient webClient() {
-        return WebClient.create(spotifyBaseUrl);
+    public WebClient webClient(WebClient.Builder webClientBuilder) {
+        return webClientBuilder.baseUrl(spotifyBaseUrl).build();
     }
 
     @Bean
