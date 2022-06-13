@@ -61,7 +61,7 @@
 
         <!-- Dependencies -->
         <spotify-web-api-core.version>2021.6.30</spotify-web-api-core.version>
-        <okhttp.version>4.9.1</okhttp.version>
+        <okhttp.version>4.10.0</okhttp.version>
         <guava.version>31.1-jre</guava.version>
         <spring-boot.version>2.7.0</spring-boot.version>
         <lombok.version>1.18.24</lombok.version>
