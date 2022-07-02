@@ -1,0 +1,56 @@
+type Artist {
+  albums(
+    """
+    A comma-separated list of keywords that will be used to filter the response. If not supplied, all album types will be returned. Valid values are:
+    - `album`
+    - `single`
+    - `appears_on`
+    - `compilation`
+    For example: `include_groups=album,single`.
+    """
+    include_groups: String,
+    "The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50. For example: `limit=2`"
+    limit: Int = 50,
+    "The index of the first album to return. Default: 0 (i.e., the first album). Use with `limit` to get the next set of albums."
+    offset: Int = 0
+  ): PagingAlbum
+  "Known external URLs for this artist."
+  external_urls: ExternalUrl
+  "Information about the followers of the artist."
+  followers: Followers
+  "A list of the genres the artist is associated with. For example: `'Prog Rock'` , `'Post-Grunge'`. (If not yet classified, the array is empty.)"
+  genres: [String]
+  "A link to the Web API endpoint providing full details of the artist."
+  href: String
+  "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the artist."
+  id: String
+  "Images of the artist in various sizes, widest first."
+  images: [Image]
+  "The name of the artist."
+  name: String
+  "The popularity of the artist. The value will be between 0 and 100, with 100 being the most popular. The artist's popularity is calculated from the popularity of all the artist's tracks."
+  popularity: Int
+  related_artists: [Artist]
+  "The object type: `'artist'`"
+  spotify_type: String
+  top_tracks: [Track]
+  "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the artist."
+  uri: String
+}
+
+type PagingArtist {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested data."
+  items: [Artist]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
