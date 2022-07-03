@@ -41,7 +41,7 @@ type Album {
     limit: Int = 50,
     "The index of the first track to return. Default: 0 (the first object). Use with limit to get the next set of tracks."
     offset: Int = 0
-  ): PagingTrack
+  ): TracksPaging
   "The Spotify URI for the album."
   uri: String
 }
@@ -58,7 +58,7 @@ type AlbumRestriction {
   reason: String
 }
 
-type PagingAlbum {
+type AlbumsPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."

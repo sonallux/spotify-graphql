@@ -55,7 +55,7 @@ type EpisodeRestriction {
   reason: String
 }
 
-type PagingEpisode {
+type EpisodesPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."

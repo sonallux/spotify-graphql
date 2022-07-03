@@ -23,7 +23,7 @@ type Category {
     limit: Int,
     "The index of the first item to return. Default: 0 (the first object). Use with `limit` to get the next set of items."
     offset: Int
-  ): PagingPlaylist
+  ): PlaylistsPaging
 }
 
 type ChangePlaylistDetailsPayload {
@@ -44,7 +44,7 @@ type ExplicitContentSettings {
 
 type FeaturedPlaylist {
   message: String
-  playlists: PagingPlaylist
+  playlists: PlaylistsPaging
 }
 
 type FollowArtistsUsersPayload {
@@ -61,25 +61,25 @@ type Library {
     limit: Int,
     "The index of the first object to return. Default: 0 (i.e., the first object). Use with `limit` to get the next set of objects."
     offset: Int
-  ): PagingSavedAlbum
+  ): SavedAlbumsPaging
   episodes(
     "The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50."
     limit: Int,
     "The index of the first object to return. Default: 0 (i.e., the first object). Use with `limit` to get the next set of objects."
     offset: Int
-  ): PagingSavedEpisode
+  ): SavedEpisodesPaging
   shows(
     "The maximum number of shows to return. Default: 20. Minimum: 1. Maximum: 50"
     limit: Int,
     "The index of the first show to return. Default: 0 (the first object). Use with limit to get the next set of shows."
     offset: Int
-  ): PagingSavedShow
+  ): SavedShowsPaging
   tracks(
     "The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50."
     limit: Int,
     "The index of the first object to return. Default: 0 (i.e., the first object). Use with `limit` to get the next set of objects."
     offset: Int
-  ): PagingSavedTrack
+  ): SavedTracksPaging
 }
 
 type Mutation {
@@ -160,7 +160,7 @@ type Mutation {
   uploadCustomPlaylistCover(input: uploadCustomPlaylistCoverInput!): UploadCustomPlaylistCoverPayload
 }
 
-type PagingCategory {
+type CategoriesPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."
@@ -177,7 +177,7 @@ type PagingCategory {
   total: Int
 }
 
-type PagingSavedAlbum {
+type SavedAlbumsPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."
@@ -194,7 +194,7 @@ type PagingSavedAlbum {
   total: Int
 }
 
-type PagingSavedEpisode {
+type SavedEpisodesPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."
@@ -211,7 +211,7 @@ type PagingSavedEpisode {
   total: Int
 }
 
-type PagingSavedShow {
+type SavedShowsPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."
@@ -228,7 +228,7 @@ type PagingSavedShow {
   total: Int
 }
 
-type PagingSavedTrack {
+type SavedTracksPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."
@@ -279,7 +279,7 @@ type PrivateUser {
     offset: Int,
     "Over what time frame the affinities are computed. Valid values: `long_term` (calculated from several years of data and including all new data as it becomes available), `medium_term` (approximately last 6 months), `short_term` (approximately last 4 weeks). Default: `medium_term`"
     time_range: String
-  ): PagingArtist
+  ): ArtistsPaging
   top_tracks(
     "The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example: `limit=2`"
     limit: Int,
@@ -287,7 +287,7 @@ type PrivateUser {
     offset: Int,
     "Over what time frame the affinities are computed. Valid values: `long_term` (calculated from several years of data and including all new data as it becomes available), `medium_term` (approximately last 6 months), `short_term` (approximately last 4 weeks). Default: `medium_term`"
     time_range: String
-  ): PagingTrack
+  ): TracksPaging
   "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the user."
   uri: String
 }
@@ -345,7 +345,7 @@ type Query {
     locale: String,
     "The index of the first item to return. Default: 0 (the first object). Use with `limit` to get the next set of categories."
     offset: Int
-  ): PagingCategory
+  ): CategoriesPaging
   category(
     "The [Spotify category ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the category."
     category_id: String!,
@@ -388,7 +388,7 @@ type Query {
     limit: Int,
     "The index of the first item to return. Default: 0 (the first object). Use with `limit` to get the next set of items."
     offset: Int
-  ): PagingAlbum
+  ): AlbumsPaging
   playlist(
     "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
     id: String,
@@ -661,12 +661,12 @@ type SavedTrack {
 }
 
 type SearchResponse {
-  albums: PagingAlbum
-  artists: PagingArtist
-  episodes: PagingEpisode
-  playlists: PagingPlaylist
-  shows: PagingShow
-  tracks: PagingTrack
+  albums: AlbumsPaging
+  artists: ArtistsPaging
+  episodes: EpisodesPaging
+  playlists: PlaylistsPaging
+  shows: ShowsPaging
+  tracks: TracksPaging
 }
 
 type SeekToPositionInCurrentlyPlayingTrackPayload {

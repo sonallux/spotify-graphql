@@ -11,7 +11,7 @@ type Show {
     limit: Int = 50,
     "The index of the first episode to return. Default: 0 (the first object). Use with limit to get the next set of episodes."
     offset: Int = 0
-  ): PagingEpisode
+  ): EpisodesPaging
   "Whether or not the show has explicit content (true = yes it does; false = no it does not OR unknown)."
   explicit: Boolean
   "External URLs for this show."
@@ -40,7 +40,7 @@ type Show {
   uri: String
 }
 
-type PagingShow {
+type ShowsPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."

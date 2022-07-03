@@ -1,3 +1,16 @@
+type LinkedTrack {
+  "Known external URLs for this track."
+  external_urls: ExternalUrl
+  "A link to the Web API endpoint providing full details of the track."
+  href: String
+  "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the track."
+  id: String
+  "The object type: 'track'."
+  spotify_type: String
+  "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the track."
+  uri: String
+}
+
 type Track {
   "The album on which the track appears. The album object includes a link in `href` to full information about the album."
   album: Album
@@ -57,7 +70,7 @@ type TrackRestriction {
   reason: String
 }
 
-type PagingTrack {
+type TracksPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."
@@ -72,17 +85,4 @@ type PagingTrack {
   previous: String
   "The total number of items available to return."
   total: Int
-}
-
-type LinkedTrack {
-  "Known external URLs for this track."
-  external_urls: ExternalUrl
-  "A link to the Web API endpoint providing full details of the track."
-  href: String
-  "The [Spotify ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the track."
-  id: String
-  "The object type: 'track'."
-  spotify_type: String
-  "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the track."
-  uri: String
 }

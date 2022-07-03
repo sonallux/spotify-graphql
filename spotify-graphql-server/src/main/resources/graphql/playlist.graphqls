@@ -29,7 +29,7 @@ type Playlist {
     limit: Int = 100,
     "The index of the first item to return. Default: 0 (the first object)."
     offset: Int = 0
-  ): PagingPlaylistTrack
+  ): PlaylistTracksPaging
   "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the playlist."
   uri: String
 }
@@ -37,21 +37,6 @@ type Playlist {
 type PlaylistOwner {
   "The name displayed on the user's profile. `null` if not available."
   display_name: String
-  "Known external URLs for this user."
-  external_urls: ExternalUrl
-  "Information about the followers of the user."
-  followers: Followers
-  "A link to the Web API endpoint for this user."
-  href: String
-  "The [Spotify user ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the user."
-  id: String
-  "The object type: 'user'"
-  spotify_type: String
-  "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for this user."
-  uri: String
-}
-
-type PlaylistUser {
   "Known external URLs for this user."
   external_urls: ExternalUrl
   "Information about the followers of the user."
@@ -77,11 +62,11 @@ type PlaylistTrack {
   track: UnionTrackEpisode
 }
 
-type PagingPlaylist {
+type PlaylistTracksPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."
-  items: [Playlist]
+  items: [PlaylistTrack]
   "The maximum number of items in the response (as set in the query or by default)."
   limit: Int
   "URL to the next page of items. ( `null` if none)"
@@ -94,11 +79,26 @@ type PagingPlaylist {
   total: Int
 }
 
-type PagingPlaylistTrack {
+type PlaylistUser {
+  "Known external URLs for this user."
+  external_urls: ExternalUrl
+  "Information about the followers of the user."
+  followers: Followers
+  "A link to the Web API endpoint for this user."
+  href: String
+  "The [Spotify user ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for the user."
+  id: String
+  "The object type: 'user'"
+  spotify_type: String
+  "The [Spotify URI](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids) for this user."
+  uri: String
+}
+
+type PlaylistsPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."
-  items: [PlaylistTrack]
+  items: [Playlist]
   "The maximum number of items in the response (as set in the query or by default)."
   limit: Int
   "URL to the next page of items. ( `null` if none)"

@@ -13,7 +13,7 @@ type Artist {
     limit: Int = 50,
     "The index of the first album to return. Default: 0 (i.e., the first album). Use with `limit` to get the next set of albums."
     offset: Int = 0
-  ): PagingAlbum
+  ): AlbumsPaging
   "Known external URLs for this artist."
   external_urls: ExternalUrl
   "Information about the followers of the artist."
@@ -38,7 +38,7 @@ type Artist {
   uri: String
 }
 
-type PagingArtist {
+type ArtistsPaging {
   "A link to the Web API endpoint returning the full result of the request"
   href: String
   "The requested data."
