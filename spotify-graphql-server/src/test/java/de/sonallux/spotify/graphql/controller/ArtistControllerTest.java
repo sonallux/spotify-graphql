@@ -74,6 +74,6 @@ public class ArtistControllerTest extends BaseControllerTest {
         assertThat(artistsRequest.getPath()).isEqualTo("/artists?ids=foo");
 
         var artistsAlbumsRequest = mockWebServer.takeRequest();
-        assertThat(artistsAlbumsRequest.getPath()).isEqualTo("/artists/foo/albums?include_groups=single&limit=50&offset=0");
+        assertThat(artistsAlbumsRequest.getPath()).isEqualTo("/artists/foo/albums?include_groups=single&limit=20&offset=0");
     }
 }

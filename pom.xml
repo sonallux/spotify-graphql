@@ -15,6 +15,7 @@
 
     <modules>
         <module>spotify-graphql-schema</module>
+        <module>spotify-graphql-schema-generator</module>
         <module>spotify-graphql-server</module>
     </modules>
 

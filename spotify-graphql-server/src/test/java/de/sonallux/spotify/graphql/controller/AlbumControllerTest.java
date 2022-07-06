@@ -69,7 +69,7 @@ class AlbumControllerTest extends BaseControllerTest {
         mockWebServer.enqueue(createJsonResponse("""
             {"albums": [
                 {"id": "foo", "type": "album", "tracks": {
-                    "total": 5, "limit": 50, "offset": 0
+                    "total": 5, "limit": 20, "offset": 0
                 }}
             ]}
             """)
@@ -82,7 +82,7 @@ class AlbumControllerTest extends BaseControllerTest {
             .errors().satisfy(errors -> assertThat(errors).isEmpty())
             .path("album.id").entity(String.class).isEqualTo("foo")
             .path("album.tracks.total").entity(Integer.class).isEqualTo(5)
-            .path("album.tracks.limit").entity(Integer.class).isEqualTo(50)
+            .path("album.tracks.limit").entity(Integer.class).isEqualTo(20)
             .path("album.tracks.offset").entity(Integer.class).isEqualTo(0)
         ;
 
