@@ -1,0 +1,84 @@
+type Episode {
+  "A URL to a 30 second preview (MP3 format) of the episode. `null` if not available."
+  audio_preview_url: String
+  "A description of the episode. HTML tags are stripped away from this field, use `html_description` field in case HTML tags are needed."
+  description: String
+  "The episode length in milliseconds."
+  duration_ms: Int
+  "Whether or not the episode has explicit content (true = yes it does; false = no it does not OR unknown)."
+  explicit: Boolean
+  "External URLs for this episode."
+  external_urls: ExternalUrl
+  "A link to the Web API endpoint providing full details of the episode."
+  href: String
+  "A description of the episode. This field may contain HTML tags."
+  html_description: String
+  "The [Spotify ID](/documentation/web-api/#spotify-uris-and-ids) for the episode."
+  id: String
+  "The cover art for the episode in various sizes, widest first."
+  images: [Image]
+  "True if the episode is hosted outside of Spotify's CDN."
+  is_externally_hosted: Boolean
+  "True if the episode is playable in the given market. Otherwise false."
+  is_playable: Boolean
+  "The language used in the episode, identified by a [ISO 639](https://en.wikipedia.org/wiki/ISO_639) code. This field is deprecated and might be removed in the future. Please use the `languages` field instead."
+  language: String
+  "A list of the languages used in the episode, identified by their [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639) code."
+  languages: [String]
+  "The name of the episode."
+  name: String
+  "The date the episode was first released, for example `\"1981-12-15\"`. Depending on the precision, it might be shown as `\"1981\"` or `\"1981-12\"`."
+  release_date: String
+  "The precision with which `release_date` value is known."
+  release_date_precision: String
+  """
+  Included in the response when a content restriction is applied.
+  See [Restriction Object](/documentation/web-api/reference/#object-episoderestrictionobject) for more details.
+  """
+  restrictions: EpisodeRestriction
+  "The user's most recent position in the episode. Set if the supplied access token is a user token and has the scope 'user-read-playback-position'."
+  resume_point: ResumePoint
+  "The show on which the episode belongs."
+  show: Show
+  "The object type."
+  spotify_type: String
+  "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the episode."
+  uri: String
+}
+
+type EpisodeRestriction {
+  """
+  The reason for the restriction. Supported values:<br>
+  - `market` - The content item is not available in the given market.<br>
+  - `product` - The content item is not available for the user's subscription type.<br>
+  - `explicit` - The content item is explicit and the user's account is set to not play explicit content.<br>
+  Additional reasons may be added in the future.
+  **Note**: If you use this field, make sure that your application safely handles unknown values.
+  """
+  reason: String
+}
+
+type EpisodesPaging {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested content"
+  items: [Episode]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
+type ResumePoint {
+  "Whether or not the episode has been fully played by the user."
+  fully_played: Boolean
+  "The user's most recent position in the episode in milliseconds."
+  resume_position_ms: Int
+}
+

@@ -1,0 +1,59 @@
+type Show {
+  "A list of the countries in which the show can be played, identified by their [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code."
+  available_markets: [String]
+  "The copyright statements of the show."
+  copyrights: [Copyright]
+  "A description of the show. HTML tags are stripped away from this field, use `html_description` field in case HTML tags are needed."
+  description: String
+  "The episodes of the show."
+  episodes(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
+    offset: Int = 0
+  ): EpisodesPaging
+  "Whether or not the show has explicit content (true = yes it does; false = no it does not OR unknown)."
+  explicit: Boolean
+  "External URLs for this show."
+  external_urls: ExternalUrl
+  "A link to the Web API endpoint providing full details of the show."
+  href: String
+  "A description of the show. This field may contain HTML tags."
+  html_description: String
+  "The [Spotify ID](/documentation/web-api/#spotify-uris-and-ids) for the show."
+  id: String
+  "The cover art for the show in various sizes, widest first."
+  images: [Image]
+  "True if all of the shows episodes are hosted outside of Spotify's CDN. This field might be `null` in some cases."
+  is_externally_hosted: Boolean
+  "A list of the languages used in the show, identified by their [ISO 639](https://en.wikipedia.org/wiki/ISO_639) code."
+  languages: [String]
+  "The media type of the show."
+  media_type: String
+  "The name of the episode."
+  name: String
+  "The publisher of the show."
+  publisher: String
+  "The object type."
+  spotify_type: String
+  "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the show."
+  uri: String
+}
+
+type ShowsPaging {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested content"
+  items: [Show]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+

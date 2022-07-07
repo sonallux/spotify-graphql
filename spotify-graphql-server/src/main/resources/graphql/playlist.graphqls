@@ -1,0 +1,113 @@
+type Playlist {
+  "`true` if the owner allows other users to modify the playlist."
+  collaborative: Boolean
+  "The playlist description. _Only returned for modified, verified playlists, otherwise_ `null`."
+  description: String
+  "Known external URLs for this playlist."
+  external_urls: ExternalUrl
+  "Information about the followers of the playlist."
+  followers: Followers
+  "A link to the Web API endpoint providing full details of the playlist."
+  href: String
+  "The [Spotify ID](/documentation/web-api/#spotify-uris-and-ids) for the playlist."
+  id: String
+  "Images for the playlist. The array may be empty or contain up to three images. The images are returned by size in descending order. See [Working with Playlists](/documentation/general/guides/working-with-playlists/). _**Note**: If returned, the source URL for the image (`url`) is temporary and will expire in less than a day._"
+  images: [Image]
+  "The name of the playlist."
+  name: String
+  "The user who owns the playlist"
+  owner: PlaylistOwner
+  "The playlist's public/private status: `true` the playlist is public, `false` the playlist is private, `null` the playlist status is not relevant. For more about public/private status, see [Working with Playlists](/documentation/general/guides/working-with-playlists/)"
+  public: Boolean
+  "The version identifier for the current playlist. Can be supplied in other requests to target a specific playlist version"
+  snapshot_id: String
+  "The object type: \"playlist\""
+  spotify_type: String
+  "The tracks of the playlist."
+  tracks(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 100."
+    limit: Int = 20, 
+    "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
+    offset: Int = 0
+  ): PlaylistTracksPaging
+  "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the playlist."
+  uri: String
+}
+
+type PlaylistOwner {
+  "The name displayed on the user's profile. `null` if not available."
+  display_name: String
+  "Known public external URLs for this user."
+  external_urls: ExternalUrl
+  "Information about the followers of this user."
+  followers: Followers
+  "A link to the Web API endpoint for this user."
+  href: String
+  "The [Spotify user ID](/documentation/web-api/#spotify-uris-and-ids) for this user."
+  id: String
+  "The object type."
+  spotify_type: String
+  "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for this user."
+  uri: String
+}
+
+type PlaylistTrack {
+  "The date and time the track or episode was added. _**Note**: some very old playlists may return `null` in this field._"
+  added_at: String
+  "The Spotify user who added the track or episode. _**Note**: some very old playlists may return `null` in this field._"
+  added_by: PlaylistUser
+  "Whether this track or episode is a [local file](https://developer.spotify.com/web-api/local-files-spotify-playlists/) or not."
+  is_local: Boolean
+  "Information about the track or episode."
+  track: UnionEpisodeTrack
+}
+
+type PlaylistTracksPaging {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested content"
+  items: [PlaylistTrack]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
+type PlaylistUser {
+  "Known public external URLs for this user."
+  external_urls: ExternalUrl
+  "Information about the followers of this user."
+  followers: Followers
+  "A link to the Web API endpoint for this user."
+  href: String
+  "The [Spotify user ID](/documentation/web-api/#spotify-uris-and-ids) for this user."
+  id: String
+  "The object type."
+  spotify_type: String
+  "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for this user."
+  uri: String
+}
+
+type PlaylistsPaging {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested content"
+  items: [Playlist]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+

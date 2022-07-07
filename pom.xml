@@ -14,7 +14,7 @@
     <url>https://github.com/sonallux/spotify-graphql</url>
 
     <modules>
-        <module>spotify-graphql-schema</module>
+        <module>spotify-graphql-schema-generator</module>
         <module>spotify-graphql-server</module>
     </modules>
 
