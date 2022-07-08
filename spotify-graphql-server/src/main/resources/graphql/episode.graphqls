@@ -1,3 +1,18 @@
+extend type Query {
+  episode(
+    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
+    id: String, 
+    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
+    uri: String
+  ): Episode
+  episodes(
+    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
+    ids: [String], 
+    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
+    uris: [String]
+  ): [Episode]
+}
+
 type Episode {
   "A URL to a 30 second preview (MP3 format) of the episode. `null` if not available."
   audio_preview_url: String

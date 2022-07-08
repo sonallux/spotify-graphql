@@ -1,6 +1,6 @@
 package de.sonallux.spotify.graphql.schema;
 
-public sealed interface Mapping permits FieldMapping, TypeMapping {
+public sealed interface Mapping permits FieldMapping, TypeMapping, BaseTypeQueryMapping {
 
     Category category();
 

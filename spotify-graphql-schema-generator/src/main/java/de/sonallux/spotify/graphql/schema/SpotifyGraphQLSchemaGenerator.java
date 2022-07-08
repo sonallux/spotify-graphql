@@ -14,8 +14,10 @@ import static graphql.schema.GraphQLArgument.newArgument;
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLList.list;
 import static graphql.schema.GraphQLNonNull.nonNull;
+import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLScalarType.newScalar;
 import static graphql.schema.GraphQLTypeReference.typeRef;
+import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
 public class SpotifyGraphQLSchemaGenerator {
@@ -29,11 +31,13 @@ public class SpotifyGraphQLSchemaGenerator {
 
     private Map<String, MappedType> graphQLObjects = new HashMap<>();
     private Map<List<String>, GraphQLUnionType> unionTypes = new HashMap<>();
+    private Map<Mapping.Category, GraphQLObjectType> queryTypes = new HashMap<>();
     private Queue<Mapping> workList = new LinkedList<>();
 
     public void generateGraphQLTypes() {
         graphQLObjects = new HashMap<>();
         unionTypes = new HashMap<>();
+        queryTypes = new HashMap<>();
         workList = new LinkedList<>(TypeMappings.ROOT_TYPE_MAPPINGS);
 
         while (!workList.isEmpty()) {
@@ -45,11 +49,25 @@ public class SpotifyGraphQLSchemaGenerator {
                 }
             } else if (element instanceof FieldMapping fieldMapping) {
                 handleFieldMapping(fieldMapping);
+            } else if (element instanceof BaseTypeQueryMapping baseTypeQueryMapping) {
+                handleBaseTypeQueryMapping(baseTypeQueryMapping);
             } else {
                 // TODO Once switch with pattern matching is out of preview this is unnecessary
                 throw new UnsupportedOperationException("Unknown mapping: " + element);
             }
         }
+    }
+
+    private void handleBaseTypeQueryMapping(BaseTypeQueryMapping baseTypeQueryMapping) {
+        queryTypes.compute(baseTypeQueryMapping.category(), (openApiName, objectType) -> {
+            if (objectType == null) {
+                objectType = newObject().name(GraphQLUtils.getGraphQLName("QueryObject")).build();
+            }
+
+            return objectType.transform(builder -> builder.fields(baseTypeQueryMapping.fieldDefinitions()));
+        });
+
+        handleTypeMapping(new TypeMapping(baseTypeQueryMapping.baseTypeOpenApiName(), baseTypeQueryMapping.category()));
     }
 
     private void handleTypeMapping(TypeMapping typeMapping) {
@@ -205,9 +223,21 @@ public class SpotifyGraphQLSchemaGenerator {
         return propertyName;
     }
 
+    private Map<Mapping.Category, List<GraphQLNamedType>> getTypeMap() {
+        var typeMap = graphQLObjects.values().stream()
+            .collect(groupingBy(MappedType::category, mapping(MappedType::graphQLType, toList())));
+
+        typeMap.computeIfAbsent(Mapping.Category.COMMON, ignore -> new ArrayList<>())
+            .addAll(unionTypes.values());
+
+        queryTypes.forEach((category, queryType) -> typeMap.computeIfAbsent(category, ignore -> new ArrayList<>()).add(queryType));
+
+        return typeMap;
+    }
+
     public void writeTypes(Path outputFolder) {
         var schemaWriter = new GraphQLSchemaWriter(outputFolder);
-        schemaWriter.writeTypes(graphQLObjects.values(), unionTypes.values());
+        schemaWriter.writeTypes(getTypeMap());
     }
 
     public static void main(String[] args) throws Exception {

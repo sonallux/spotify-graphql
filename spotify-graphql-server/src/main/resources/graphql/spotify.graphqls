@@ -312,30 +312,6 @@ type PublicUser {
 }
 
 type Query {
-  album(
-    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
-    id: String,
-    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
-    uri: String
-  ): Album
-  albums(
-    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
-    ids: [String],
-    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
-    uris: [String]
-  ): [Album]
-  artist(
-    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
-    id: String,
-    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
-    uri: String
-  ): Artist
-  artists(
-    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
-    ids: [String],
-    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
-    uris: [String]
-  ): [Artist]
   categories(
     "A country: an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). Provide this parameter if you want to narrow the list of returned categories to those relevant to a particular country. If omitted, the returned items will be globally relevant."
     country: String,
@@ -354,18 +330,6 @@ type Query {
     "The desired language, consisting of an [ISO 639-1](http://en.wikipedia.org/wiki/ISO_639-1) language code and an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2), joined by an underscore. For example: `es_MX`, meaning \"Spanish (Mexico)\". Provide this parameter if you want the category strings returned in a particular language. Note that, if `locale` is not supplied, or if the specified language is not available, the category strings returned will be in the Spotify default language (American English)."
     locale: String
   ): Category
-  episode(
-    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
-    id: String,
-    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
-    uri: String
-  ): Episode
-  episodes(
-    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
-    ids: [String],
-    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
-    uris: [String]
-  ): [Episode]
   featured_playlists(
     "A country: an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). Provide this parameter if you want the list of returned items to be relevant to a particular country. If omitted, the returned items will be relevant to all countries."
     country: String,
@@ -389,18 +353,6 @@ type Query {
     "The index of the first item to return. Default: 0 (the first object). Use with `limit` to get the next set of items."
     offset: Int
   ): AlbumsPaging
-  playlist(
-    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
-    id: String,
-    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
-    uri: String
-  ): Playlist
-  playlists(
-    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
-    ids: [String],
-    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
-    uris: [String]
-  ): [Playlist]
   recommendation(
     "The target size of the list of recommended tracks. For seeds with unusually small pools or when highly restrictive filtering is applied, it may be impossible to generate the requested number of recommended tracks. Debugging information for such cases is available in the response. Default: 20. Minimum: 1. Maximum: 100."
     limit: Int,
@@ -533,30 +485,6 @@ type Query {
     """
     type: String!
   ): SearchResponse
-  show(
-    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
-    id: String,
-    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
-    uri: String
-  ): Show
-  shows(
-    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
-    ids: [String],
-    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
-    uris: [String]
-  ): [Show]
-  track(
-    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
-    id: String,
-    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
-    uri: String
-  ): Track
-  tracks(
-    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
-    ids: [String],
-    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
-    uris: [String]
-  ): [Track]
   user(
     "The user's [Spotify user ID](https://developer.spotify.com/documentation/web-api/#spotify-uris-and-ids)."
     user_id: String!

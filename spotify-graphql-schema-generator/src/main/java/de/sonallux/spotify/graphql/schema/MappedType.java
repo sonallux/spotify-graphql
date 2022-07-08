@@ -1,8 +1,8 @@
 package de.sonallux.spotify.graphql.schema;
 
 import graphql.schema.GraphQLFieldDefinition;
+import graphql.schema.GraphQLNamedType;
 import graphql.schema.GraphQLObjectType;
-import graphql.schema.GraphQLSchemaElement;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public record MappedType(Mapping.Category category, GraphQLObjectType graphQLObj
         this(category, newObject().name(GraphQLUtils.getGraphQLName(openApiName)).build());
     }
 
-    public GraphQLSchemaElement graphQLSchemaElement() {
+    public GraphQLNamedType graphQLType() {
         return graphQLObject;
     }
 
