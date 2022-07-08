@@ -5,9 +5,9 @@ public sealed interface Mapping permits FieldMapping, TypeMapping, BaseTypeQuery
     Category category();
 
     enum Category {
+        CORE,
         ALBUM,
         ARTIST,
-        COMMON,
         EPISODE,
         PLAYLIST,
         SHOW,

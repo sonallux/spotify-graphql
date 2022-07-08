@@ -49,7 +49,7 @@ public class GraphQLSchemaWriter {
     }
 
     private static boolean isObjectTypeExtension(Mapping.Category category, GraphQLType type) {
-        return category != Mapping.Category.COMMON && type instanceof GraphQLObjectType objectType && objectType.getName().equals("Query");
+        return category != Mapping.Category.CORE && type instanceof GraphQLObjectType objectType && objectType.getName().equals("Query");
     }
 
 }

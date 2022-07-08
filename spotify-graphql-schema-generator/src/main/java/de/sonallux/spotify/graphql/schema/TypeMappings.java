@@ -11,11 +11,11 @@ public final class TypeMappings {
 
     static {
         ROOT_TYPE_MAPPINGS = List.of(
-            new TypeMapping("CopyrightObject", TypeMapping.Category.COMMON),
-            new TypeMapping("ExternalIdObject", TypeMapping.Category.COMMON),
-            new TypeMapping("ExternalUrlObject", TypeMapping.Category.COMMON),
-            new TypeMapping("FollowersObject", TypeMapping.Category.COMMON),
-            new TypeMapping("ImageObject", TypeMapping.Category.COMMON),
+            new TypeMapping("CopyrightObject", TypeMapping.Category.CORE),
+            new TypeMapping("ExternalIdObject", TypeMapping.Category.CORE),
+            new TypeMapping("ExternalUrlObject", TypeMapping.Category.CORE),
+            new TypeMapping("FollowersObject", TypeMapping.Category.CORE),
+            new TypeMapping("ImageObject", TypeMapping.Category.CORE),
 
             new BaseTypeQueryMapping(TypeMapping.Category.ARTIST),
             new TypeMapping("ArtistsPagingObject", Mapping.Category.ARTIST),

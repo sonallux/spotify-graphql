@@ -14,7 +14,6 @@ import static graphql.schema.GraphQLArgument.newArgument;
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLList.list;
 import static graphql.schema.GraphQLNonNull.nonNull;
-import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLScalarType.newScalar;
 import static graphql.schema.GraphQLTypeReference.typeRef;
 import static java.util.stream.Collectors.*;
@@ -61,13 +60,15 @@ public class SpotifyGraphQLSchemaGenerator {
     private void handleBaseTypeQueryMapping(BaseTypeQueryMapping baseTypeQueryMapping) {
         queryTypes.compute(baseTypeQueryMapping.category(), (openApiName, objectType) -> {
             if (objectType == null) {
-                objectType = newObject().name(GraphQLUtils.getGraphQLName("QueryObject")).build();
+                objectType = GraphQLUtils.getGraphQLObject("QueryObject").build();
             }
 
             return objectType.transform(builder -> builder.fields(baseTypeQueryMapping.fieldDefinitions()));
         });
 
         handleTypeMapping(new TypeMapping(baseTypeQueryMapping.baseTypeOpenApiName(), baseTypeQueryMapping.category()));
+
+        graphQLObjects.computeIfAbsent("QueryObject", openApiName -> new MappedType(Mapping.Category.CORE, openApiName));
     }
 
     private void handleTypeMapping(TypeMapping typeMapping) {
@@ -227,7 +228,7 @@ public class SpotifyGraphQLSchemaGenerator {
         var typeMap = graphQLObjects.values().stream()
             .collect(groupingBy(MappedType::category, mapping(MappedType::graphQLType, toList())));
 
-        typeMap.computeIfAbsent(Mapping.Category.COMMON, ignore -> new ArrayList<>())
+        typeMap.computeIfAbsent(Mapping.Category.CORE, ignore -> new ArrayList<>())
             .addAll(unionTypes.values());
 
         queryTypes.forEach((category, queryType) -> typeMap.computeIfAbsent(category, ignore -> new ArrayList<>()).add(queryType));

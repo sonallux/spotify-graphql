@@ -6,12 +6,10 @@ import graphql.schema.GraphQLObjectType;
 
 import java.util.List;
 
-import static graphql.schema.GraphQLObjectType.newObject;
-
 public record MappedType(Mapping.Category category, GraphQLObjectType graphQLObject) {
 
     public MappedType(Mapping.Category category, String openApiName) {
-        this(category, newObject().name(GraphQLUtils.getGraphQLName(openApiName)).build());
+        this(category, GraphQLUtils.getGraphQLObject(openApiName).build());
     }
 
     public GraphQLNamedType graphQLType() {

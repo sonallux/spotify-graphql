@@ -1,3 +1,5 @@
+type Query
+
 union UnionEpisodeTrack = Episode | Track
 
 type Copyright {
