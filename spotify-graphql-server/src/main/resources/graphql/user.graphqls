@@ -1,8 +1,10 @@
 extend type Query {
   me: PrivateUser
   user(
-    "The user's [Spotify user ID](/documentation/web-api/#spotify-uris-and-ids)."
-    user_id: String!
+    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
+    id: String, 
+    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
+    uri: String
   ): PublicUser
 }
 

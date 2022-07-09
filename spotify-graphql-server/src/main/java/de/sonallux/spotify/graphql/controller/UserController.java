@@ -4,6 +4,7 @@ import org.dataloader.DataLoader;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
@@ -22,8 +23,10 @@ public class UserController extends BaseController {
     }
 
     @QueryMapping
-    Mono<Map<String, Object>> user(@Argument("user_id") String userId, DataLoader<String, Map<String, Object>> rawLoader) {
-        return Mono.fromFuture(rawLoader.load("/users/" + userId));
+    Mono<Map<String, Object>> user(@Nullable @Argument String id, @Nullable @Argument String uri,
+                                       DataLoader<String, Map<String, Object>> userLoader
+    ) {
+        return load(id, uri, "user", userLoader);
     }
 
     @SchemaMapping(typeName = "PublicUser", field = "playlists")

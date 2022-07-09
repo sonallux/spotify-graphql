@@ -13,17 +13,21 @@ import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLList.list;
 import static graphql.schema.GraphQLTypeReference.typeRef;
 
-public record BaseTypeQueryMapping(Mapping.Category category) implements Mapping {
+public record BaseTypeQueryMapping(Mapping.Category category, String baseTypeOpenApiName, boolean onlySingle) implements Mapping {
     private static final Converter<String, String> CATEGORY_TO_OPEN_API_NAME = UPPER_UNDERSCORE.converterTo(UPPER_CAMEL);
     private static final Converter<String, String> CATEGORY_TO_FIELD_NAME = UPPER_UNDERSCORE.converterTo(LOWER_UNDERSCORE);
 
-
-    public String baseTypeOpenApiName() {
-        return CATEGORY_TO_OPEN_API_NAME.convert(category.name()) + "Object";
+    public BaseTypeQueryMapping(Category category) {
+        this(category, CATEGORY_TO_OPEN_API_NAME.convert(category.name()) + "Object", false);
     }
 
     public List<GraphQLFieldDefinition> fieldDefinitions() {
         var type = typeRef(GraphQLUtils.getGraphQLName(baseTypeOpenApiName()));
+
+        if (onlySingle) {
+            return List.of(fieldDefinitionSingleQuery(type));
+        }
+
         return List.of(fieldDefinitionSingleQuery(type), fieldDefinitionMultipleQuery(type));
     }
 
