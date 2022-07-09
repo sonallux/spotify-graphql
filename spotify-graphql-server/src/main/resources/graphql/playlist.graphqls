@@ -1,3 +1,18 @@
+extend type Query {
+  playlist(
+    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
+    id: String, 
+    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
+    uri: String
+  ): Playlist
+  playlists(
+    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
+    ids: [String], 
+    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
+    uris: [String]
+  ): [Playlist]
+}
+
 type Playlist {
   "`true` if the owner allows other users to modify the playlist."
   collaborative: Boolean

@@ -1,3 +1,18 @@
+extend type Query {
+  show(
+    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
+    id: String, 
+    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
+    uri: String
+  ): Show
+  shows(
+    "A list of Spotify IDs of the objects to query. Either `ids` or `uris` must be specified"
+    ids: [String], 
+    "A list of Spotify URIs of the objects to query. Either `ids` or `uris` must be specified"
+    uris: [String]
+  ): [Show]
+}
+
 type Show {
   "A list of the countries in which the show can be played, identified by their [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code."
   available_markets: [String]

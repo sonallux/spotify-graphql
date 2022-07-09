@@ -1,5 +1,6 @@
 package de.sonallux.spotify.graphql.schema;
 
+import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLUnionType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,10 @@ public final class GraphQLUtils {
         return openApiName
             .replace("Object", "")
             .replace("Simplified", "");
+    }
+
+    public static GraphQLObjectType.Builder getGraphQLObject(String openApiName) {
+        return newObject().name(getGraphQLName(openApiName));
     }
 
     public static GraphQLUnionType createUnionType(List<String> possibleTypes) {
