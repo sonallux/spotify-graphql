@@ -56,7 +56,7 @@ type Episode {
   "The show on which the episode belongs."
   show: Show
   "The object type."
-  spotify_type: String
+  type: String
   "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the episode."
   uri: String
 }

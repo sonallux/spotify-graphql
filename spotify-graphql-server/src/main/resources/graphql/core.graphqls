@@ -3,10 +3,10 @@ type Query
 union UnionEpisodeTrack = Episode | Track
 
 type Copyright {
-  "The type of copyright: `C` = the copyright, `P` = the sound recording (performance) copyright."
-  spotify_type: String
   "The copyright text for this content."
   text: String
+  "The type of copyright: `C` = the copyright, `P` = the sound recording (performance) copyright."
+  type: String
 }
 
 type ExternalId {

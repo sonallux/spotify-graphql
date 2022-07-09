@@ -46,8 +46,6 @@ type Album {
   release_date_precision: String
   "Included in the response when a content restriction is applied."
   restrictions: AlbumRestriction
-  "The object type."
-  spotify_type: String
   "The number of tracks in the album."
   total_tracks: Int
   "The tracks of the album."
@@ -57,6 +55,8 @@ type Album {
     "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
     offset: Int = 0
   ): TracksPaging
+  "The object type."
+  type: String
   "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the album."
   uri: String
 }

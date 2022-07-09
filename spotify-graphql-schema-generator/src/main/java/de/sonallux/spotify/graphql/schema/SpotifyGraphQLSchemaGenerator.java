@@ -147,7 +147,7 @@ public class SpotifyGraphQLSchemaGenerator {
 
     private GraphQLFieldDefinition createFieldDefinition(String property, Schema<?> schema, Mapping.Category category) {
         return newFieldDefinition()
-            .name(getGraphQLFieldName(property))
+            .name(property)
             .type(mapToOutputType(schema, category))
             .description(schema.getDescription())
             .build();
@@ -214,14 +214,6 @@ public class SpotifyGraphQLSchemaGenerator {
             workList.add(new TypeMapping(openApiName, category));
         }
         return typeRef(GraphQLUtils.getGraphQLName(openApiName));
-    }
-
-    private String getGraphQLFieldName(String propertyName) {
-        if ("type".equals(propertyName)) {
-            // TODO: check if GraphQL field names must not be keywords, otherwise remove this renaming
-            return "spotify_type";
-        }
-        return propertyName;
     }
 
     private Map<Mapping.Category, List<GraphQLNamedType>> getTypeMap() {

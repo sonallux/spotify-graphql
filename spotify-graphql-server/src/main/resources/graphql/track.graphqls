@@ -21,7 +21,7 @@ type LinkedTrack {
   "The [Spotify ID](/documentation/web-api/#spotify-uris-and-ids) for the track."
   id: String
   "The object type: \"track\"."
-  spotify_type: String
+  type: String
   "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the track."
   uri: String
 }
@@ -64,10 +64,10 @@ type Track {
   See [Restriction Object](/documentation/web-api/reference/#object-trackrestrictionobject) for more details.
   """
   restrictions: TrackRestriction
-  "The object type: \"track\"."
-  spotify_type: String
   "The number of the track. If an album has several discs, the track number is the number on the specified disc."
   track_number: Int
+  "The object type: \"track\"."
+  type: String
   "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the track."
   uri: String
 }

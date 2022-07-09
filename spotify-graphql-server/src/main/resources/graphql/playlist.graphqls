@@ -36,8 +36,6 @@ type Playlist {
   public: Boolean
   "The version identifier for the current playlist. Can be supplied in other requests to target a specific playlist version"
   snapshot_id: String
-  "The object type: \"playlist\""
-  spotify_type: String
   "The tracks of the playlist."
   tracks(
     "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 100."
@@ -45,6 +43,8 @@ type Playlist {
     "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
     offset: Int = 0
   ): PlaylistTracksPaging
+  "The object type: \"playlist\""
+  type: String
   "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the playlist."
   uri: String
 }
@@ -61,7 +61,7 @@ type PlaylistOwner {
   "The [Spotify user ID](/documentation/web-api/#spotify-uris-and-ids) for this user."
   id: String
   "The object type."
-  spotify_type: String
+  type: String
   "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for this user."
   uri: String
 }
@@ -104,7 +104,7 @@ type PlaylistUser {
   "The [Spotify user ID](/documentation/web-api/#spotify-uris-and-ids) for this user."
   id: String
   "The object type."
-  spotify_type: String
+  type: String
   "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for this user."
   uri: String
 }

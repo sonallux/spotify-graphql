@@ -50,7 +50,7 @@ type Show {
   "The publisher of the show."
   publisher: String
   "The object type."
-  spotify_type: String
+  type: String
   "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the show."
   uri: String
 }

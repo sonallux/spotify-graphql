@@ -15,9 +15,6 @@ public class SpotifyPropertyDataFetcher implements DataFetcher<Object> {
     }
 
     public static SpotifyPropertyDataFetcher fetching(String propertyName) {
-        if ("spotify_type".equals(propertyName)) {
-            return new SpotifyPropertyDataFetcher("type");
-        }
         return new SpotifyPropertyDataFetcher(propertyName);
     }
 
