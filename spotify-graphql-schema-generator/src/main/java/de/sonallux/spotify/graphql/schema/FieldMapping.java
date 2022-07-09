@@ -5,7 +5,11 @@ public record FieldMapping(String openApiName, String fieldName, String endpoint
         this(openApiName, fieldName, endpointPath, null, category);
     }
 
+    public boolean isQueryObject() {
+        return "QueryObject".equals(openApiName);
+    }
+
     public boolean isQueryMappingForCategory() {
-        return "QueryObject".equals(openApiName) && category != Category.CORE;
+        return isQueryObject() && category != Category.CORE;
     }
 }

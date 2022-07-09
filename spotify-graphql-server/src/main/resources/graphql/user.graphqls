@@ -1,5 +1,9 @@
 extend type Query {
   me: PrivateUser
+  user(
+    "The user's [Spotify user ID](/documentation/web-api/#spotify-uris-and-ids)."
+    user_id: String!
+  ): PublicUser
 }
 
 type ExplicitContentSettings {
@@ -33,6 +37,25 @@ type PrivateUser {
   "The object type: \"user\""
   type: String
   "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the user."
+  uri: String
+}
+
+type PublicUser {
+  "The name displayed on the user's profile. `null` if not available."
+  display_name: String
+  "Known public external URLs for this user."
+  external_urls: ExternalUrl
+  "Information about the followers of this user."
+  followers: Followers
+  "A link to the Web API endpoint for this user."
+  href: String
+  "The [Spotify user ID](/documentation/web-api/#spotify-uris-and-ids) for this user."
+  id: String
+  "The user's profile image."
+  images: [Image]
+  "The object type."
+  type: String
+  "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for this user."
   uri: String
 }
 

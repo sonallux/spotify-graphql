@@ -105,7 +105,7 @@ public class SpotifyGraphQLSchemaGenerator {
             .type(mapToOutputType(responseSchema, fieldMapping.category()))
             .arguments(parameters.stream()
                 .map(spotifyOpenApi::getParameter)
-                .filter(parameter -> !"path".equals(parameter.getIn()))
+                .filter(parameter -> fieldMapping.isQueryObject() || !"path".equals(parameter.getIn()))
                 .filter(parameter -> !IGNORED_FIELDS.contains(parameter.getName()))
                 .map(this::mapParameter)
                 .toList()

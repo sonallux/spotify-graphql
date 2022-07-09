@@ -42,7 +42,8 @@ public final class TypeMappings {
             new TypeMapping("LinkedTrackObject", Mapping.Category.TRACK),
             new TypeMapping("TracksPagingObject", Mapping.Category.TRACK),
 
-            new FieldMapping("QueryObject", "me", "/me", Mapping.Category.USER)
+            new FieldMapping("QueryObject", "me", "/me", Mapping.Category.USER),
+            new FieldMapping("QueryObject", "user", "/users/{user_id}", Mapping.Category.USER)
         );
     }
 }
