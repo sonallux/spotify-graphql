@@ -3,6 +3,7 @@ package de.sonallux.spotify.graphql.controller;
 import org.dataloader.DataLoader;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
@@ -15,8 +16,18 @@ public class UserController extends BaseController {
         return Mono.fromFuture(rawLoader.load("/me"));
     }
 
+    @SchemaMapping(typeName = "PrivateUser", field = "playlists")
+    Mono<Map<String, Object>> mePlaylists(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
+        return loadPagingObject("/me/playlists", null, arguments, rawLoader);
+    }
+
     @QueryMapping
     Mono<Map<String, Object>> user(@Argument("user_id") String userId, DataLoader<String, Map<String, Object>> rawLoader) {
         return Mono.fromFuture(rawLoader.load("/users/" + userId));
+    }
+
+    @SchemaMapping(typeName = "PublicUser", field = "playlists")
+    Mono<Map<String, Object>> userPlaylists(Map<String, Object> user, @Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
+        return loadPagingObject(user, arguments, "playlists", rawLoader);
     }
 }

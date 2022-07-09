@@ -32,6 +32,16 @@ type PrivateUser {
   id: String
   "The user's profile image."
   images: [Image]
+  playlists(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    """
+    'The index of the first playlist to return. Default:
+    0 (the first object). Maximum offset: 100.000\. Use with `limit` to get the
+    next set of playlists.'
+    """
+    offset: Int = 0
+  ): PlaylistsPaging
   "The user's Spotify subscription level: \"premium\", \"free\", etc. (The subscription level \"open\" can be considered the same as \"free\".) _This field is only available when the current user has granted access to the [user-read-private](/documentation/general/guides/authorization-guide/#list-of-scopes) scope._"
   product: String
   "The object type: \"user\""
@@ -53,6 +63,16 @@ type PublicUser {
   id: String
   "The user's profile image."
   images: [Image]
+  playlists(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    """
+    The index of the first playlist to return. Default:
+    0 (the first object). Maximum offset: 100.000\. Use with `limit` to get the
+    next set of playlists.
+    """
+    offset: Int = 0
+  ): PlaylistsPaging
   "The object type."
   type: String
   "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for this user."

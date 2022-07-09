@@ -24,20 +24,25 @@ abstract class BaseController {
             .flatMap(actualIds -> Mono.fromFuture(dataloader.loadMany(actualIds)));
     }
 
-    Mono<Map<String, Object>> loadPagingObject(Map<String, Object> parentObject, Map<String, Object> arguments,
-                                               String property, DataLoader<String, Map<String, Object>> rawLoader) {
-        var id = (String) parentObject.get("id");
-        var parentType = (String) parentObject.get("type");
-
+    Mono<Map<String, Object>> loadPagingObject(String url, @Nullable Map<String, Object> existingPagingObject,
+                                               Map<String, Object> arguments,
+                                               DataLoader<String, Map<String, Object>> rawLoader) {
         var limitArgument = (Integer) arguments.get("limit");
         var offsetArgument = (Integer) arguments.get("offset");
 
-        var existingPagingObject = (Map<String, Object>)parentObject.get(property);
         if (existingPagingObject != null && arguments.size() == 2 && arePagingArgumentsMatch(existingPagingObject, limitArgument, offsetArgument)) {
             return Mono.just(existingPagingObject);
         }
 
-        return Mono.fromFuture(rawLoader.load(String.format("/%ss/%s/%s%s", parentType, id, property, argumentsFromQueryString(arguments))));
+        return Mono.fromFuture(rawLoader.load(String.format("%s%s", url, argumentsFromQueryString(arguments))));
+    }
+
+    Mono<Map<String, Object>> loadPagingObject(Map<String, Object> parentObject, Map<String, Object> arguments,
+                                               String property, DataLoader<String, Map<String, Object>> rawLoader) {
+        var id = (String) parentObject.get("id");
+        var parentType = (String) parentObject.get("type");
+        var existingPagingObject = (Map<String, Object>)parentObject.get(property);
+        return loadPagingObject(String.format("/%ss/%s/%s", parentType, id, property), existingPagingObject, arguments, rawLoader);
     }
 
     private boolean arePagingArgumentsMatch(Map<String, Object> pagingObject, int limitArgument, int offsetArgument) {
