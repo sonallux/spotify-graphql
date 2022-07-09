@@ -97,28 +97,38 @@ public class SpotifyGraphQLSchemaGenerator {
     }
 
     private void handleFieldMapping(FieldMapping fieldMapping) {
-        graphQLObjects.compute(fieldMapping.openApiName(), (openApiName, mappedType) -> {
-            if (mappedType == null) {
-                mappedType = new MappedType(fieldMapping.category(), openApiName);
-            }
+        var parameters = spotifyOpenApi.getParameters(fieldMapping);
+        var responseSchema = spotifyOpenApi.getResponseSchema(fieldMapping);
 
-            var operation = spotifyOpenApi.getOperation(fieldMapping);
-            var responseSchema = spotifyOpenApi.getResponseSchema(fieldMapping);
+        var field = newFieldDefinition()
+            .name(fieldMapping.fieldName())
+            .type(mapToOutputType(responseSchema, fieldMapping.category()))
+            .arguments(parameters.stream()
+                .map(spotifyOpenApi::getParameter)
+                .filter(parameter -> !"path".equals(parameter.getIn()))
+                .filter(parameter -> !IGNORED_FIELDS.contains(parameter.getName()))
+                .map(this::mapParameter)
+                .toList()
+            )
+            .build();
 
-            var field = newFieldDefinition()
-                .name(fieldMapping.fieldName())
-                .type(mapToOutputType(responseSchema, fieldMapping.category()))
-                .arguments(operation.getParameters().stream()
-                    .map(spotifyOpenApi::getParameter)
-                    .filter(parameter -> !"path".equals(parameter.getIn()))
-                    .filter(parameter -> !IGNORED_FIELDS.contains(parameter.getName()))
-                    .map(this::mapParameter)
-                    .toList()
-                )
-                .build();
+        if (fieldMapping.isQueryMappingForCategory()) {
+            queryTypes.compute(fieldMapping.category(), (openApiName, objectType) -> {
+                if (objectType == null) {
+                    objectType = GraphQLUtils.getGraphQLObject("QueryObject").build();
+                }
 
-            return mappedType.withFields(List.of(field));
-        });
+                return objectType.transform(builder -> builder.field(field));
+            });
+        } else {
+            graphQLObjects.compute(fieldMapping.openApiName(), (openApiName, mappedType) -> {
+                if (mappedType == null) {
+                    mappedType = new MappedType(fieldMapping.category(), openApiName);
+                }
+
+                return mappedType.withFields(List.of(field));
+            });
+        }
     }
 
     private GraphQLArgument mapParameter(Parameter parameter) {

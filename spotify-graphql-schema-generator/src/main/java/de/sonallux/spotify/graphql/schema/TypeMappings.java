@@ -40,8 +40,9 @@ public final class TypeMappings {
 
             new BaseTypeQueryMapping(Mapping.Category.TRACK),
             new TypeMapping("LinkedTrackObject", Mapping.Category.TRACK),
-            new TypeMapping("TracksPagingObject", Mapping.Category.TRACK)
+            new TypeMapping("TracksPagingObject", Mapping.Category.TRACK),
 
+            new FieldMapping("QueryObject", "me", "/me", Mapping.Category.USER)
         );
     }
 }
