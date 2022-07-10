@@ -11,6 +11,7 @@ import io.swagger.v3.parser.core.models.ParseOptions;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public record SpotifyOpenApi(OpenAPI openAPI) {
 
@@ -58,6 +59,14 @@ public record SpotifyOpenApi(OpenAPI openAPI) {
 
     public ApiResponse getResponseFromRef(String reference) {
         return getResponse(getResponseName(reference));
+    }
+
+    public List<Parameter> getParameters(FieldMapping fieldMapping) {
+        var operation = getOperation(fieldMapping);
+        if (operation.getParameters() == null) {
+            return List.of();
+        }
+        return operation.getParameters();
     }
 
     public Operation getOperation(FieldMapping fieldMapping) {

@@ -30,7 +30,11 @@ public class SpotifyPropertyDataFetcher implements DataFetcher<Object> {
             var id = (String) parentObject.get("id");
             var type = (String) parentObject.get("type");
             if (id != null && type != null) {
-                return environment.getDataLoader(type + "Loader")
+                var dataLoader = environment.getDataLoader(type + "Loader");
+                if (dataLoader == null) {
+                    return null;
+                }
+                return dataLoader
                     .load(id)
                     .handle((fullObject, error) -> {
                         if (fullObject instanceof Map) {

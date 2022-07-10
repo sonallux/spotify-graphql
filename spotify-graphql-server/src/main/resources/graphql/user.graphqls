@@ -1,0 +1,83 @@
+extend type Query {
+  me: PrivateUser
+  user(
+    "The Spotify ID of the object to query. Either `id` or `uri` must be specified"
+    id: String, 
+    "The Spotify URI of the object to query. Either `id` or `uri` must be specified"
+    uri: String
+  ): PublicUser
+}
+
+type ExplicitContentSettings {
+  "When `true`, indicates that explicit content should not be played."
+  filter_enabled: Boolean
+  "When `true`, indicates that the explicit content setting is locked and can't be changed by the user."
+  filter_locked: Boolean
+}
+
+type PrivateUser {
+  "The country of the user, as set in the user's account profile. An [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). _This field is only available when the current user has granted access to the [user-read-private](/documentation/general/guides/authorization-guide/#list-of-scopes) scope._"
+  country: String
+  "The name displayed on the user's profile. `null` if not available."
+  display_name: String
+  "The user's email address, as entered by the user when creating their account. _**Important!** This email address is unverified; there is no proof that it actually belongs to the user._ _This field is only available when the current user has granted access to the [user-read-email](/documentation/general/guides/authorization-guide/#list-of-scopes) scope._"
+  email: String
+  "The user's explicit content settings. _This field is only available when the current user has granted access to the [user-read-private](/documentation/general/guides/authorization-guide/#list-of-scopes) scope._"
+  explicit_content: ExplicitContentSettings
+  "Known external URLs for this user."
+  external_urls: ExternalUrl
+  "Information about the followers of the user."
+  followers: Followers
+  "A link to the Web API endpoint for this user."
+  href: String
+  "The [Spotify user ID](/documentation/web-api/#spotify-uris-and-ids) for the user."
+  id: String
+  "The user's profile image."
+  images: [Image]
+  playlists(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    """
+    'The index of the first playlist to return. Default:
+    0 (the first object). Maximum offset: 100.000\. Use with `limit` to get the
+    next set of playlists.'
+    """
+    offset: Int = 0
+  ): PlaylistsPaging
+  "The user's Spotify subscription level: \"premium\", \"free\", etc. (The subscription level \"open\" can be considered the same as \"free\".) _This field is only available when the current user has granted access to the [user-read-private](/documentation/general/guides/authorization-guide/#list-of-scopes) scope._"
+  product: String
+  "The object type: \"user\""
+  type: String
+  "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the user."
+  uri: String
+}
+
+type PublicUser {
+  "The name displayed on the user's profile. `null` if not available."
+  display_name: String
+  "Known public external URLs for this user."
+  external_urls: ExternalUrl
+  "Information about the followers of this user."
+  followers: Followers
+  "A link to the Web API endpoint for this user."
+  href: String
+  "The [Spotify user ID](/documentation/web-api/#spotify-uris-and-ids) for this user."
+  id: String
+  "The user's profile image."
+  images: [Image]
+  playlists(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    """
+    The index of the first playlist to return. Default:
+    0 (the first object). Maximum offset: 100.000\. Use with `limit` to get the
+    next set of playlists.
+    """
+    offset: Int = 0
+  ): PlaylistsPaging
+  "The object type."
+  type: String
+  "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for this user."
+  uri: String
+}
+

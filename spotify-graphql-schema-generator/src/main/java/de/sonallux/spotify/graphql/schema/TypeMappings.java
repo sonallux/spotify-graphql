@@ -40,8 +40,14 @@ public final class TypeMappings {
 
             new BaseTypeQueryMapping(Mapping.Category.TRACK),
             new TypeMapping("LinkedTrackObject", Mapping.Category.TRACK),
-            new TypeMapping("TracksPagingObject", Mapping.Category.TRACK)
+            new TypeMapping("TracksPagingObject", Mapping.Category.TRACK),
 
-        );
+            new FieldMapping("QueryObject", "me", "/me", Mapping.Category.USER),
+            new TypeMapping("PrivateUserObject", Mapping.Category.USER),
+            new FieldMapping("PrivateUserObject", "playlists", "/me/playlists", Mapping.Category.USER),
+            new BaseTypeQueryMapping(Mapping.Category.USER, "PublicUserObject", true),
+            new TypeMapping("PublicUserObject", Mapping.Category.USER),
+            new FieldMapping("PublicUserObject", "playlists", "/users/{user_id}/playlists", Mapping.Category.USER)
+            );
     }
 }
