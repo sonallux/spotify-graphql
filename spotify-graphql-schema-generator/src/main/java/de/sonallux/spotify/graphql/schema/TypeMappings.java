@@ -47,7 +47,13 @@ public final class TypeMappings {
             new FieldMapping("PrivateUserObject", "playlists", "/me/playlists", Mapping.Category.USER),
             new BaseTypeQueryMapping(Mapping.Category.USER, "PublicUserObject", true),
             new TypeMapping("PublicUserObject", Mapping.Category.USER),
-            new FieldMapping("PublicUserObject", "playlists", "/users/{user_id}/playlists", Mapping.Category.USER)
-            );
+            new FieldMapping("PublicUserObject", "playlists", "/users/{user_id}/playlists", Mapping.Category.USER),
+
+            new EmptyObjectQueryMapping(Mapping.Category.LIBRARY, "library", "LibraryObject"),
+            new FieldMapping("LibraryObject", "albums", "/me/albums", Mapping.Category.LIBRARY),
+            new FieldMapping("LibraryObject", "episodes", "/me/episodes", Mapping.Category.LIBRARY),
+            new FieldMapping("LibraryObject", "shows", "/me/shows", Mapping.Category.LIBRARY),
+            new FieldMapping("LibraryObject", "tracks", "/me/tracks", Mapping.Category.LIBRARY)
+        );
     }
 }

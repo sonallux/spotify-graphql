@@ -1,0 +1,142 @@
+extend type Query {
+  library: Library
+}
+
+type Library {
+  albums(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
+    offset: Int = 0
+  ): SavedAlbumPaging
+  episodes(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
+    offset: Int = 0
+  ): SavedEpisodePaging
+  shows(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
+    offset: Int = 0
+  ): SavedShowPaging
+  tracks(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
+    offset: Int = 0
+  ): SavedTrackPaging
+}
+
+type SavedAlbum {
+  """
+  The date and time the album was saved
+  Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ.
+  If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object.
+  """
+  added_at: String
+  "Information about the album."
+  album: Album
+}
+
+type SavedAlbumPaging {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested content"
+  items: [SavedAlbum]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
+type SavedEpisode {
+  """
+  The date and time the episode was saved.
+  Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ.
+  """
+  added_at: String
+  "Information about the episode."
+  episode: Episode
+}
+
+type SavedEpisodePaging {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested content"
+  items: [SavedEpisode]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
+type SavedShow {
+  """
+  The date and time the show was saved.
+  Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ.
+  If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object.
+  """
+  added_at: String
+  "Information about the show."
+  show: Show
+}
+
+type SavedShowPaging {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested content"
+  items: [SavedShow]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
+type SavedTrack {
+  """
+  The date and time the track was saved.
+  Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ.
+  If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object.
+  """
+  added_at: String
+  "Information about the track."
+  track: Track
+}
+
+type SavedTrackPaging {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested content"
+  items: [SavedTrack]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+

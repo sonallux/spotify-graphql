@@ -19,7 +19,7 @@ public class UserController extends BaseController {
 
     @SchemaMapping(typeName = "PrivateUser", field = "playlists")
     Mono<Map<String, Object>> mePlaylists(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/me/playlists", null, arguments, rawLoader);
+        return loadPagingObject("/me/playlists", arguments, rawLoader);
     }
 
     @QueryMapping

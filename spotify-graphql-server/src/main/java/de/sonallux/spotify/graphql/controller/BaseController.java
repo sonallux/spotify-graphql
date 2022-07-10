@@ -24,16 +24,8 @@ abstract class BaseController {
             .flatMap(actualIds -> Mono.fromFuture(dataloader.loadMany(actualIds)));
     }
 
-    Mono<Map<String, Object>> loadPagingObject(String url, @Nullable Map<String, Object> existingPagingObject,
-                                               Map<String, Object> arguments,
+    Mono<Map<String, Object>> loadPagingObject(String url, Map<String, Object> arguments,
                                                DataLoader<String, Map<String, Object>> rawLoader) {
-        var limitArgument = (Integer) arguments.get("limit");
-        var offsetArgument = (Integer) arguments.get("offset");
-
-        if (existingPagingObject != null && arguments.size() == 2 && arePagingArgumentsMatch(existingPagingObject, limitArgument, offsetArgument)) {
-            return Mono.just(existingPagingObject);
-        }
-
         return Mono.fromFuture(rawLoader.load(String.format("%s%s", url, argumentsFromQueryString(arguments))));
     }
 
@@ -41,8 +33,16 @@ abstract class BaseController {
                                                String property, DataLoader<String, Map<String, Object>> rawLoader) {
         var id = (String) parentObject.get("id");
         var parentType = (String) parentObject.get("type");
+
+        var limitArgument = (Integer) arguments.get("limit");
+        var offsetArgument = (Integer) arguments.get("offset");
+
         var existingPagingObject = (Map<String, Object>)parentObject.get(property);
-        return loadPagingObject(String.format("/%ss/%s/%s", parentType, id, property), existingPagingObject, arguments, rawLoader);
+        if (existingPagingObject != null && arguments.size() == 2 && arePagingArgumentsMatch(existingPagingObject, limitArgument, offsetArgument)) {
+            return Mono.just(existingPagingObject);
+        }
+
+        return Mono.fromFuture(rawLoader.load(String.format("/%ss/%s/%s%s", parentType, id, property, argumentsFromQueryString(arguments))));
     }
 
     private boolean arePagingArgumentsMatch(Map<String, Object> pagingObject, int limitArgument, int offsetArgument) {

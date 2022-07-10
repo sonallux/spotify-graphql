@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static graphql.Scalars.*;
 import static graphql.schema.GraphQLArgument.newArgument;
@@ -50,6 +51,8 @@ public class SpotifyGraphQLSchemaGenerator {
                 handleFieldMapping(fieldMapping);
             } else if (element instanceof BaseTypeQueryMapping baseTypeQueryMapping) {
                 handleBaseTypeQueryMapping(baseTypeQueryMapping);
+            } else if (element instanceof EmptyObjectQueryMapping emptyObjectQueryMapping) {
+                handleEmptyObjectQueryMapping(emptyObjectQueryMapping);
             } else {
                 // TODO Once switch with pattern matching is out of preview this is unnecessary
                 throw new UnsupportedOperationException("Unknown mapping: " + element);
@@ -57,18 +60,28 @@ public class SpotifyGraphQLSchemaGenerator {
         }
     }
 
-    private void handleBaseTypeQueryMapping(BaseTypeQueryMapping baseTypeQueryMapping) {
-        queryTypes.compute(baseTypeQueryMapping.category(), (openApiName, objectType) -> {
-            if (objectType == null) {
-                objectType = GraphQLUtils.getGraphQLObject("QueryObject").build();
-            }
+    private void handleEmptyObjectQueryMapping(EmptyObjectQueryMapping emptyObjectQueryMapping) {
+        transformQueryObject(emptyObjectQueryMapping.category(), builder -> builder.field(emptyObjectQueryMapping.fieldDefinition()));
 
-            return objectType.transform(builder -> builder.fields(baseTypeQueryMapping.fieldDefinitions()));
-        });
+        graphQLObjects.computeIfAbsent(emptyObjectQueryMapping.objectName(), name -> new MappedType(emptyObjectQueryMapping.category(), name));
+    }
+
+    private void handleBaseTypeQueryMapping(BaseTypeQueryMapping baseTypeQueryMapping) {
+        transformQueryObject(baseTypeQueryMapping.category(), builder -> builder.fields(baseTypeQueryMapping.fieldDefinitions()));
 
         handleTypeMapping(new TypeMapping(baseTypeQueryMapping.baseTypeOpenApiName(), baseTypeQueryMapping.category()));
 
         graphQLObjects.computeIfAbsent("QueryObject", openApiName -> new MappedType(Mapping.Category.CORE, openApiName));
+    }
+
+    private void transformQueryObject(Mapping.Category category, Consumer<GraphQLObjectType.Builder> builderConsumer) {
+        queryTypes.compute(category, (ignore, queryType) -> {
+            if (queryType == null) {
+                queryType = GraphQLUtils.getGraphQLObject("QueryObject").build();
+            }
+
+            return queryType.transform(builderConsumer);
+        });
     }
 
     private void handleTypeMapping(TypeMapping typeMapping) {
@@ -196,6 +209,16 @@ public class SpotifyGraphQLSchemaGenerator {
             if (schema.getAllOf() != null) {
                 if (schema.getAllOf().size() == 1) {
                     return getGraphQLTypeReference(schema.getAllOf().get(0).get$ref(), category);
+                } else if (schema.getAllOf().size() == 2 && schema.getAllOf().get(0).get$ref().equals("#/components/schemas/PagingObject")) {
+                    var pagingSchema = spotifyOpenApi.getSchemaFromRef("#/components/schemas/PagingObject");
+                    Map<String, Schema> itemsProperties = schema.getAllOf().get(1).getProperties();
+                    var itemsOpenApiName = SpotifyOpenApi.getSchemaName(itemsProperties.get("items").getItems().get$ref());
+
+                    var mappedType = graphQLObjects.computeIfAbsent(itemsOpenApiName + "PagingObject", openApiName ->
+                        new MappedType(category, openApiName)
+                            .withFields(mapProperties(pagingSchema.getProperties(), category))
+                            .withFields(mapProperties(itemsProperties, category)));
+                    return typeRef(mappedType.graphQLObject().getName());
                 }
             } else if (schema.getOneOf() != null) {
                 var possibleTypes = schema.getOneOf().stream()
