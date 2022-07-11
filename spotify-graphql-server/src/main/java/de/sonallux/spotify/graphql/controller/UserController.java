@@ -22,6 +22,16 @@ public class UserController extends BaseController {
         return loadPagingObject("/me/playlists", arguments, rawLoader);
     }
 
+    @SchemaMapping(typeName = "PrivateUser", field = "top_artists")
+    Mono<Map<String, Object>> meTopArtists(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
+        return loadPagingObject("/me/top/artists", arguments, rawLoader);
+    }
+
+    @SchemaMapping(typeName = "PrivateUser", field = "top_tracks")
+    Mono<Map<String, Object>> meTopTracks(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
+        return loadPagingObject("/me/top/tracks", arguments, rawLoader);
+    }
+
     @QueryMapping
     Mono<Map<String, Object>> user(@Nullable @Argument String id, @Nullable @Argument String uri,
                                        DataLoader<String, Map<String, Object>> userLoader

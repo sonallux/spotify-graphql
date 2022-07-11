@@ -46,6 +46,22 @@ type PrivateUser {
   ): PlaylistsPaging
   "The user's Spotify subscription level: \"premium\", \"free\", etc. (The subscription level \"open\" can be considered the same as \"free\".) _This field is only available when the current user has granted access to the [user-read-private](/documentation/general/guides/authorization-guide/#list-of-scopes) scope._"
   product: String
+  top_artists(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
+    offset: Int = 0, 
+    "Over what time frame the affinities are computed. Valid values: `long_term` (calculated from several years of data and including all new data as it becomes available), `medium_term` (approximately last 6 months), `short_term` (approximately last 4 weeks). Default: `medium_term`"
+    time_range: String
+  ): ArtistsPaging
+  top_tracks(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
+    offset: Int = 0, 
+    "Over what time frame the affinities are computed. Valid values: `long_term` (calculated from several years of data and including all new data as it becomes available), `medium_term` (approximately last 6 months), `short_term` (approximately last 4 weeks). Default: `medium_term`"
+    time_range: String
+  ): TracksPaging
   "The object type: \"user\""
   type: String
   "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the user."
