@@ -55,7 +55,14 @@ public final class TypeMappings {
             new FieldMapping("LibraryObject", "albums", "/me/albums", Mapping.Category.LIBRARY),
             new FieldMapping("LibraryObject", "episodes", "/me/episodes", Mapping.Category.LIBRARY),
             new FieldMapping("LibraryObject", "shows", "/me/shows", Mapping.Category.LIBRARY),
-            new FieldMapping("LibraryObject", "tracks", "/me/tracks", Mapping.Category.LIBRARY)
+            new FieldMapping("LibraryObject", "tracks", "/me/tracks", Mapping.Category.LIBRARY),
+
+            new EmptyObjectQueryMapping(Mapping.Category.BROWSE, "browse", "BrowseObject"),
+            new FieldMapping("BrowseObject", "categories", "/browse/categories", "categories", Mapping.Category.BROWSE),
+            new FieldMapping("BrowseObject", "category", "/browse/categories/{category_id}", null, false, Mapping.Category.BROWSE),
+            new TypeMapping("CategoryObject", Mapping.Category.BROWSE),
+            new FieldMapping("CategoryObject", "playlists", "/browse/categories/{category_id}/playlists", "playlists", Mapping.Category.BROWSE)
+
         );
     }
 }

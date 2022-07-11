@@ -26,7 +26,7 @@ abstract class BaseController {
 
     Mono<Map<String, Object>> loadPagingObject(String url, Map<String, Object> arguments,
                                                DataLoader<String, Map<String, Object>> rawLoader) {
-        return Mono.fromFuture(rawLoader.load(String.format("%s%s", url, argumentsFromQueryString(arguments))));
+        return Mono.fromFuture(rawLoader.load(String.format("%s%s", url, queryStringFromArguments(arguments))));
     }
 
     Mono<Map<String, Object>> loadPagingObject(Map<String, Object> parentObject, Map<String, Object> arguments,
@@ -42,7 +42,7 @@ abstract class BaseController {
             return Mono.just(existingPagingObject);
         }
 
-        return Mono.fromFuture(rawLoader.load(String.format("/%ss/%s/%s%s", parentType, id, property, argumentsFromQueryString(arguments))));
+        return Mono.fromFuture(rawLoader.load(String.format("/%ss/%s/%s%s", parentType, id, property, queryStringFromArguments(arguments))));
     }
 
     private boolean arePagingArgumentsMatch(Map<String, Object> pagingObject, int limitArgument, int offsetArgument) {
@@ -52,7 +52,7 @@ abstract class BaseController {
         return Objects.equals(limit, limitArgument) && Objects.equals(offset, offsetArgument);
     }
 
-    private String argumentsFromQueryString(Map<String, Object> arguments) {
+    String queryStringFromArguments(Map<String, Object> arguments) {
         if (arguments.isEmpty()) {
             return "";
         }
