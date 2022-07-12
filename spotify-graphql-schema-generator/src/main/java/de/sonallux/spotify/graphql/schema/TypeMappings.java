@@ -62,7 +62,8 @@ public final class TypeMappings {
             new FieldMapping("BrowseObject", "category", "/browse/categories/{category_id}", null, false, Mapping.Category.BROWSE),
             new TypeMapping("CategoryObject", Mapping.Category.BROWSE),
             new FieldMapping("CategoryObject", "playlists", "/browse/categories/{category_id}/playlists", "playlists", Mapping.Category.BROWSE),
-            new FieldMapping("BrowseObject", "featured_playlists", "/browse/featured-playlists", Mapping.Category.BROWSE)
+            new FieldMapping("BrowseObject", "featured_playlists", "/browse/featured-playlists", Mapping.Category.BROWSE),
+            new FieldMapping("BrowseObject", "new_releases", "/browse/new-releases", "albums", Mapping.Category.BROWSE)
         );
     }
 }

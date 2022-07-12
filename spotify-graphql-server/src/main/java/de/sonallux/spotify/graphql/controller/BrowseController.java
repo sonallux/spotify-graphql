@@ -43,4 +43,10 @@ public class BrowseController extends BaseController {
     Mono<Map<String, Object>> featuredPlaylists(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
         return loadPagingObject("/browse/featured-playlists", arguments, rawLoader);
     }
+
+    @SchemaMapping(typeName = "Browse", field = "new_releases")
+    Mono<Object> newReleases(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
+        return loadPagingObject("/browse/new-releases", arguments, rawLoader)
+            .map(response -> response.get("albums"));
+    }
 }

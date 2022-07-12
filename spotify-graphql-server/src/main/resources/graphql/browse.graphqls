@@ -39,6 +39,14 @@ type Browse {
     "A timestamp in [ISO 8601 format](http://en.wikipedia.org/wiki/ISO_8601): `yyyy-MM-ddTHH:mm:ss`. Use this parameter to specify the user's local time to get results tailored for that specific date and time in the day. If not provided, the response defaults to the current UTC time. Example: \"2014-10-23T09:00:00\" for a user whose local time is 9AM. If there were no featured playlists (or there is no data) at the specified time, the response will revert to the current UTC time."
     timestamp: String
   ): PagedPlaylistsAndMessage
+  new_releases(
+    "A country: an [ISO 3166-1 alpha-2 country code](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). Provide this parameter if you want the list of returned items to be relevant to a particular country. If omitted, the returned items will be relevant to all countries."
+    country: String, 
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
+    offset: Int = 0
+  ): AlbumsPaging
 }
 
 type Category {
