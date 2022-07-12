@@ -73,6 +73,11 @@ public record SpotifyOpenApi(OpenAPI openAPI) {
         return openAPI.getPaths().get(fieldMapping.endpointPath()).getGet();
     }
 
+    public String getResponseSchemaName(FieldMapping fieldMapping) {
+        var operation = getOperation(fieldMapping);
+        return getResponseName(operation.getResponses().get("200").get$ref());
+    }
+
     public Schema<?> getResponseSchema(FieldMapping fieldMapping) {
         var operation = getOperation(fieldMapping);
         var response = getResponseFromRef(operation.getResponses().get("200").get$ref());

@@ -113,9 +113,26 @@ public class SpotifyGraphQLSchemaGenerator {
         var parameters = spotifyOpenApi.getParameters(fieldMapping);
         var responseSchema = spotifyOpenApi.getResponseSchema(fieldMapping);
 
+        var fieldType = mapToOutputType(responseSchema, fieldMapping.category());
+        if (fieldType == GRAPHQL_DUMMY_TYPE) {
+            var responseTypeName = spotifyOpenApi.getResponseSchemaName(fieldMapping);
+            var type = graphQLObjects.computeIfAbsent(responseTypeName, openApiName -> {
+                var mappedType = new MappedType(fieldMapping.category(), responseTypeName);
+                if (responseSchema instanceof ObjectSchema objectSchema) {
+                    return mappedType.withFields(mapProperties(objectSchema.getProperties(), fieldMapping.category()));
+                } else {
+                    return null;
+                }
+            });
+            if (type == null) {
+                throw new IllegalArgumentException("Can not map response schema type");
+            }
+            fieldType = type.graphQLObject();
+        }
+
         var field = newFieldDefinition()
             .name(fieldMapping.fieldName())
-            .type(mapToOutputType(responseSchema, fieldMapping.category()))
+            .type(fieldType)
             .arguments(parameters.stream()
                 .map(spotifyOpenApi::getParameter)
                 .filter(fieldMapping::filterParameter)
