@@ -18,21 +18,21 @@ public class LibraryController extends BaseController {
 
     @SchemaMapping(typeName = "Library")
     Mono<Map<String, Object>> albums(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/me/albums", arguments, rawLoader);
+        return loadRawObject("/me/albums", arguments, rawLoader);
     }
 
     @SchemaMapping(typeName = "Library")
     Mono<Map<String, Object>> episodes(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/me/episodes", arguments, rawLoader);
+        return loadRawObject("/me/episodes", arguments, rawLoader);
     }
 
     @SchemaMapping(typeName = "Library")
     Mono<Map<String, Object>> shows(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/me/shows", arguments, rawLoader);
+        return loadRawObject("/me/shows", arguments, rawLoader);
     }
 
     @SchemaMapping(typeName = "Library")
     Mono<Map<String, Object>> tracks(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/me/tracks", arguments, rawLoader);
+        return loadRawObject("/me/tracks", arguments, rawLoader);
     }
 }

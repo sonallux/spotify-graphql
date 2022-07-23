@@ -1,4 +1,40 @@
-type Query
+type Query {
+  search(
+    """
+    If `include_external=audio` is specified it signals that the client can play externally hosted audio content, and marks
+    the content as playable in the response. By default externally hosted audio content is marked as unplayable in the response.
+    """
+    include_external: String, 
+    "The maximum number of results to return in each item type."
+    limit: Int = 20, 
+    """
+    The index of the first result to return. Use
+    with limit to get the next page of search results.
+    """
+    offset: Int = 0, 
+    """
+    Your search query.
+    
+    You can narrow down your search using field filters. The available filters are `album`, `artist`, `track`, `year`, `upc`, `tag:hipster`, `tag:new`, `isrc`, and `genre`. Each field filter only applies to certain result types.
+    
+    The `artist` filter can be used while searching albums, artists or tracks.<br />
+    The `album` and `year` filters can be used while searching albums or tracks. You can filter on a single `year` or a range (e.g. 1955-1960).<br />
+    The `genre` filter can be use while searching tracks and artists.<br />
+    The `isrc` and `track` filters can be used while searching tracks.<br />
+    The `upc`, `tag:new` and `tag:hipster` filters can only be used while searching albums. The `tag:new` filter will return albums released in the past two weeks and `tag:hipster` can be used to return only albums with the lowest 10% popularity.<br />
+    
+    You can also use the `NOT` operator to exclude keywords from your search.
+    """
+    q: String!, 
+    """
+    A comma-separated list of item types to search
+    across. Search results include hits from all the specified item types. For
+    example: `q=name:abacab&type=album,track` returns both albums and tracks
+    with "abacab" included in their name.
+    """
+    type: [String]!
+  ): SearchItems
+}
 
 union UnionEpisodeTrack = Episode | Track
 
@@ -37,5 +73,14 @@ type Image {
   url: String
   "The image width in pixels."
   width: Int
+}
+
+type SearchItems {
+  albums: AlbumsPaging
+  artists: ArtistsPaging
+  episodes: EpisodesPaging
+  playlists: PlaylistsPaging
+  shows: ShowsPaging
+  tracks: TracksPaging
 }
 

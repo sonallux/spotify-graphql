@@ -24,9 +24,14 @@ abstract class BaseController {
             .flatMap(actualIds -> Mono.fromFuture(dataloader.loadMany(actualIds)));
     }
 
-    Mono<Map<String, Object>> loadPagingObject(String url, Map<String, Object> arguments,
-                                               DataLoader<String, Map<String, Object>> rawLoader) {
-        return Mono.fromFuture(rawLoader.load(String.format("%s%s", url, queryStringFromArguments(arguments))));
+    Mono<Map<String, Object>> loadRawObject(String url, Map<String, Object> arguments,
+                                            DataLoader<String, Map<String, Object>> rawLoader) {
+        var urlWithQuery = String.format("%s%s", url, queryStringFromArguments(arguments));
+        return loadRawObject(urlWithQuery, rawLoader);
+    }
+
+    Mono<Map<String, Object>> loadRawObject(String url, DataLoader<String, Map<String, Object>> rawLoader) {
+        return Mono.fromFuture(rawLoader.load(url));
     }
 
     Mono<Map<String, Object>> loadPagingObject(Map<String, Object> parentObject, Map<String, Object> arguments,
@@ -57,8 +62,15 @@ abstract class BaseController {
             return "";
         }
         return "?" + arguments.entrySet().stream()
-            .map(e -> e.getKey() + "=" + e.getValue())
+            .map(e -> e.getKey() + "=" + valueForQueryString(e.getValue()))
             .collect(Collectors.joining("&"));
+    }
+
+    String valueForQueryString(Object object) {
+        if (object instanceof List<?> list) {
+            return list.stream().map(this::valueForQueryString).collect(Collectors.joining(","));
+        }
+        return object.toString();
     }
 
     String extractSpotifyId(@Nullable String id, @Nullable String uri, String type) {

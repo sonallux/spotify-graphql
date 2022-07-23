@@ -65,7 +65,9 @@ public final class TypeMappings {
             new FieldMapping("BrowseObject", "featured_playlists", "/browse/featured-playlists", Mapping.Category.BROWSE),
             new FieldMapping("BrowseObject", "new_releases", "/browse/new-releases", "albums", Mapping.Category.BROWSE),
             new FieldMapping("BrowseObject", "recommendations", "/recommendations", Mapping.Category.BROWSE),
-            new FieldMapping("BrowseObject", "recommendations_genre_seeds", "/recommendations/available-genre-seeds", "genres", Mapping.Category.BROWSE)
+            new FieldMapping("BrowseObject", "recommendations_genre_seeds", "/recommendations/available-genre-seeds", "genres", Mapping.Category.BROWSE),
+
+            new FieldMapping("QueryObject", "search", "/search", Mapping.Category.CORE)
         );
     }
 }

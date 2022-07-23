@@ -19,7 +19,7 @@ public class BrowseController extends BaseController {
 
     @SchemaMapping(typeName = "Browse")
     Mono<Object> categories(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/browse/categories", arguments, rawLoader)
+        return loadRawObject("/browse/categories", arguments, rawLoader)
             .map(response -> response.get("categories"));
     }
 
@@ -27,26 +27,24 @@ public class BrowseController extends BaseController {
     Mono<Map<String, Object>> category(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
         var mutableArguments = new HashMap<>(arguments);
         var id = mutableArguments.remove("category_id");
-        var queryString = queryStringFromArguments(mutableArguments);
-
-        return Mono.fromFuture(rawLoader.load(String.format("/browse/categories/%s%s", id, queryString)));
+        return loadRawObject(String.format("/browse/categories/%s", id), mutableArguments, rawLoader);
     }
 
     @SchemaMapping(typeName = "Category")
     Mono<Object> playlists(Map<String, Object> category, @Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
         var categoryId = category.get("id");
-        return loadPagingObject(String.format("/browse/categories/%s/playlists", categoryId), arguments, rawLoader)
+        return loadRawObject(String.format("/browse/categories/%s/playlists", categoryId), arguments, rawLoader)
             .map(response -> response.get("playlists"));
     }
 
     @SchemaMapping(typeName = "Browse", field = "featured_playlists")
     Mono<Map<String, Object>> featuredPlaylists(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/browse/featured-playlists", arguments, rawLoader);
+        return loadRawObject("/browse/featured-playlists", arguments, rawLoader);
     }
 
     @SchemaMapping(typeName = "Browse", field = "new_releases")
     Mono<Object> newReleases(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/browse/new-releases", arguments, rawLoader)
+        return loadRawObject("/browse/new-releases", arguments, rawLoader)
             .map(response -> response.get("albums"));
     }
 
@@ -55,12 +53,12 @@ public class BrowseController extends BaseController {
         if (!arguments.containsKey("seed_artists") && !arguments.containsKey("seed_genres") && !arguments.containsKey("seed_tracks")) {
             return Mono.error(new IllegalArgumentException("Require between one and 5 seed values in any combination of `seed_artists`, `seed_tracks` and `seed_genres`"));
         }
-        return loadPagingObject("/recommendations", arguments, rawLoader);
+        return loadRawObject("/recommendations", arguments, rawLoader);
     }
 
     @SchemaMapping(typeName = "Browse", field = "recommendations_genre_seeds")
     Mono<Object> recommendationsGenreSeeds(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/recommendations/available-genre-seeds", arguments, rawLoader)
+        return loadRawObject("/recommendations/available-genre-seeds", arguments, rawLoader)
             .map(response -> response.get("genres"));
     }
 }

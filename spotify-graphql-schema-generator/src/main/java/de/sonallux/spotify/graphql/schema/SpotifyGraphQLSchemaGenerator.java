@@ -204,6 +204,8 @@ public class SpotifyGraphQLSchemaGenerator {
             return GraphQLBoolean;
         } else if (schema instanceof DateSchema || schema instanceof DateTimeSchema) {
             return GraphQLString;
+        } else if (schema instanceof ArraySchema) {
+            return list(mapToInputType(schema.getItems()));
         } else {
             throw new IllegalArgumentException("Can not map OpenApi schema to input type: " + schema);
         }

@@ -14,22 +14,22 @@ import java.util.Map;
 public class UserController extends BaseController {
     @QueryMapping
     Mono<Map<String, Object>> me(DataLoader<String, Map<String, Object>> rawLoader) {
-        return Mono.fromFuture(rawLoader.load("/me"));
+        return loadRawObject("/me", rawLoader);
     }
 
     @SchemaMapping(typeName = "PrivateUser", field = "playlists")
     Mono<Map<String, Object>> mePlaylists(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/me/playlists", arguments, rawLoader);
+        return loadRawObject("/me/playlists", arguments, rawLoader);
     }
 
     @SchemaMapping(typeName = "PrivateUser", field = "top_artists")
     Mono<Map<String, Object>> meTopArtists(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/me/top/artists", arguments, rawLoader);
+        return loadRawObject("/me/top/artists", arguments, rawLoader);
     }
 
     @SchemaMapping(typeName = "PrivateUser", field = "top_tracks")
     Mono<Map<String, Object>> meTopTracks(@Argument Map<String, Object> arguments, DataLoader<String, Map<String, Object>> rawLoader) {
-        return loadPagingObject("/me/top/tracks", arguments, rawLoader);
+        return loadRawObject("/me/top/tracks", arguments, rawLoader);
     }
 
     @QueryMapping
