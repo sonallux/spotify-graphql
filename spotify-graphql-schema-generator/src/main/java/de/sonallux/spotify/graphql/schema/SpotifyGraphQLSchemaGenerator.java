@@ -38,7 +38,7 @@ public class SpotifyGraphQLSchemaGenerator {
         graphQLObjects = new HashMap<>();
         unionTypes = new HashMap<>();
         queryTypes = new HashMap<>();
-        workList = new LinkedList<>(TypeMappings.ROOT_TYPE_MAPPINGS);
+        workList = new LinkedList<>(Mappings.ROOT_TYPE_MAPPINGS);
 
         while (!workList.isEmpty()) {
             var element = workList.remove();

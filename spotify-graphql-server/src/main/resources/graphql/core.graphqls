@@ -1,4 +1,5 @@
 type Query {
+  markets: [String]
   search(
     """
     If `include_external=audio` is specified it signals that the client can play externally hosted audio content, and marks

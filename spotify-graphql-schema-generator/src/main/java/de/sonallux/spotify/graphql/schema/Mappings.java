@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class TypeMappings {
+public final class Mappings {
     public static final List<Mapping> ROOT_TYPE_MAPPINGS;
 
     static {
@@ -67,7 +67,8 @@ public final class TypeMappings {
             new FieldMapping("BrowseObject", "recommendations", "/recommendations", Mapping.Category.BROWSE),
             new FieldMapping("BrowseObject", "recommendations_genre_seeds", "/recommendations/available-genre-seeds", "genres", Mapping.Category.BROWSE),
 
-            new FieldMapping("QueryObject", "search", "/search", Mapping.Category.CORE)
+            new FieldMapping("QueryObject", "search", "/search", Mapping.Category.CORE),
+            new FieldMapping("QueryObject", "markets", "/markets", "markets", Mapping.Category.CORE)
         );
     }
 }
