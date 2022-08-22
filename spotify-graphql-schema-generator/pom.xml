@@ -20,7 +20,7 @@
     <url>https://github.com/sonallux/spotify-graphql</url>
 
     <properties>
-        <swagger-parser.version>2.1.1</swagger-parser.version>
+        <swagger-parser.version>2.1.2</swagger-parser.version>
     </properties>
 
     <dependencies>
