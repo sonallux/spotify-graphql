@@ -1,0 +1,67 @@
+type Audiobook {
+  "The author(s) for the audiobook."
+  authors: [Author]
+  "A list of the countries in which the audiobook can be played, identified by their [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code."
+  available_markets: [String]
+  "The chapters of the audiobook."
+  chapters: ChaptersPaging
+  "The copyright statements of the audiobook."
+  copyrights: [Copyright]
+  "A description of the audiobook. HTML tags are stripped away from this field, use `html_description` field in case HTML tags are needed."
+  description: String
+  "Whether or not the audiobook has explicit content (true = yes it does; false = no it does not OR unknown)."
+  explicit: Boolean
+  "External URLs for this audiobook."
+  external_urls: ExternalUrl
+  "A link to the Web API endpoint providing full details of the audiobook."
+  href: String
+  "A description of the audiobook. This field may contain HTML tags."
+  html_description: String
+  "The [Spotify ID](/documentation/web-api/#spotify-uris-and-ids) for the audiobook."
+  id: String
+  "The cover art for the audiobook in various sizes, widest first."
+  images: [Image]
+  "A list of the languages used in the audiobook, identified by their [ISO 639](https://en.wikipedia.org/wiki/ISO_639) code."
+  languages: [String]
+  "The media type of the audiobook."
+  media_type: String
+  "The name of the audiobook."
+  name: String
+  narrators: Narrator
+  "The publisher of the audiobook."
+  publisher: String
+  "The number of chapters in this audiobook."
+  total_chapters: Int
+  "The object type."
+  type: String
+  "The [Spotify URI](/documentation/web-api/#spotify-uris-and-ids) for the audiobook."
+  uri: String
+}
+
+type AudiobooksPaging {
+  "A link to the Web API endpoint returning the full result of the request"
+  href: String
+  "The requested content"
+  items: [Audiobook]
+  "The maximum number of items in the response (as set in the query or by default)."
+  limit: Int
+  "URL to the next page of items. ( `null` if none)"
+  next: String
+  "The offset of the items returned (as set in the query or by default)"
+  offset: Int
+  "URL to the previous page of items. ( `null` if none)"
+  previous: String
+  "The total number of items available to return."
+  total: Int
+}
+
+type Author {
+  "The name of the author."
+  name: String
+}
+
+type Narrator {
+  "The name of the Narrator."
+  name: String
+}
+
