@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class SpotifyObjectTypeResolver implements TypeResolver {
 
-    private static final List<String> SPOTIFY_BASE_OBJECT_TYPE_NAMES = List.of("Album", "Artist", "Episode", "Playlist", "Show", "Track");
+    private static final List<String> SPOTIFY_BASE_OBJECT_TYPE_NAMES = List.of("Album", "Artist", "Audiobook", "Chapter", "Episode", "Playlist", "Show", "Track");
 
     public boolean canResolveUnionType(UnionTypeDefinition unionTypeDefinition) {
         return unionTypeDefinition.getMemberTypes().stream().allMatch(type -> {

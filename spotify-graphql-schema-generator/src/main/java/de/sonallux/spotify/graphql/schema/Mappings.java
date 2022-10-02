@@ -27,12 +27,16 @@ public final class Mappings {
             new TypeMapping("AlbumsPagingObject", Mapping.Category.ALBUM),
             new FieldMapping("AlbumObject", "tracks", "/albums/{id}/tracks", Mapping.Category.ALBUM),
 
+            new BaseTypeQueryMapping(TypeMapping.Category.AUDIOBOOK),
             new TypeMapping("AudiobooksPagingObject", Mapping.Category.AUDIOBOOK),
 
+            new BaseTypeQueryMapping(TypeMapping.Category.CHAPTER),
             new TypeMapping("ChaptersPagingObject", Mapping.Category.CHAPTER),
 
             new BaseTypeQueryMapping(Mapping.Category.EPISODE),
             new TypeMapping("EpisodesPagingObject", Mapping.Category.EPISODE),
+            new TypeMapping("EpisodeRestrictionObject", Mapping.Category.EPISODE),
+            new TypeMapping("ResumePointObject", Mapping.Category.EPISODE),
 
             new BaseTypeQueryMapping(Mapping.Category.PLAYLIST),
             new TypeMapping("PlaylistsPagingObject", Mapping.Category.PLAYLIST),

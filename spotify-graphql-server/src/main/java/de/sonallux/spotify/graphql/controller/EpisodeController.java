@@ -14,14 +14,14 @@ import java.util.Map;
 public class EpisodeController extends BaseController {
     @QueryMapping
     Mono<Map<String, Object>> episode(@Nullable @Argument String id, @Nullable @Argument String uri,
-                                    DataLoader<String, Map<String, Object>> episodeLoader
+                                      DataLoader<String, Map<String, Object>> episodeLoader
     ) {
         return load(id, uri, "episode", episodeLoader);
     }
 
     @QueryMapping
     Mono<List<Map<String, Object>>> episodes(@Nullable @Argument List<String> ids, @Nullable @Argument List<String> uris,
-                                           DataLoader<String, Map<String, Object>> episodeLoader
+                                             DataLoader<String, Map<String, Object>> episodeLoader
     ) {
         return loadMany(ids, uris, "episode", episodeLoader);
     }

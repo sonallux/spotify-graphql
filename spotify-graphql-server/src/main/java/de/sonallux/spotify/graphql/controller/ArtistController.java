@@ -22,7 +22,7 @@ public class ArtistController extends BaseController {
 
     @QueryMapping
     Mono<List<Map<String, Object>>> artists(@Nullable @Argument List<String> ids, @Nullable @Argument List<String> uris,
-                                           DataLoader<String, Map<String, Object>> artistLoader
+                                            DataLoader<String, Map<String, Object>> artistLoader
     ) {
         return loadMany(ids, uris, "artist", artistLoader);
     }

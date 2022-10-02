@@ -1,10 +1,11 @@
 package de.sonallux.spotify.graphql.loaders;
 
 import com.google.common.collect.Lists;
-import de.sonallux.spotify.graphql.security.AuthenticationGraphQlInterceptor;
 import de.sonallux.spotify.graphql.exception.MissingAuthorizationException;
 import de.sonallux.spotify.graphql.exception.ObjectNotFoundException;
+import de.sonallux.spotify.graphql.security.AuthenticationGraphQlInterceptor;
 import lombok.extern.slf4j.Slf4j;
+import org.dataloader.BatchLoaderEnvironment;
 import org.dataloader.Try;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.graphql.execution.BatchLoaderRegistry;
@@ -34,31 +35,33 @@ public class BatchLoaders {
         this.webClient = webClient;
 
         batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("albumLoader").registerBatchLoader((ids, env) ->
-            queryBaseObjects("albums", 20, ids));
+            queryBaseObjects("albums", 20, ids, env));
         batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("artistLoader").registerBatchLoader((ids, env) ->
-            queryBaseObjects("artists", 50, ids));
+            queryBaseObjects("artists", 50, ids, env));
+        batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("audiobookLoader").registerBatchLoader((ids, env) ->
+            queryBaseObjects("audiobooks", 50, ids, env));
+        batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("chapterLoader").registerBatchLoader((ids, env) ->
+            queryBaseObjects("chapters", 50, ids, env));
         batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("episodeLoader").registerBatchLoader((ids, env) ->
-            queryBaseObjects("episodes", 50, ids));
-        batchLoaderRegistry.<String, Map<String, Object>>forName("playlistLoader").registerBatchLoader((ids, env) ->
-            queryPlaylists(ids));
+            queryBaseObjects("episodes", 50, ids, env));
+        batchLoaderRegistry.<String, Map<String, Object>>forName("playlistLoader").registerBatchLoader(this::queryPlaylists);
         batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("showLoader").registerBatchLoader((ids, env) ->
-            queryBaseObjects("shows", 50, ids));
+            queryBaseObjects("shows", 50, ids, env));
         batchLoaderRegistry.<String, Try<Map<String, Object>>>forName("trackLoader").registerBatchLoader((ids, env) ->
-            queryBaseObjects("tracks", 50, ids));
-        batchLoaderRegistry.<String, Map<String, Object>>forName("userLoader").registerBatchLoader((ids, env) ->
-            queryUsers(ids));
+            queryBaseObjects("tracks", 50, ids, env));
+        batchLoaderRegistry.<String, Map<String, Object>>forName("userLoader").registerBatchLoader(this::queryUsers);
 
         batchLoaderRegistry.<String, Map<String, Object>>forName("rawLoader").registerBatchLoader((urls, env) ->
             queryUrls(urls));
     }
 
-    private Flux<Try<Map<String, Object>>> queryBaseObjects(String type, int maxIdsPerQuery, List<String> ids) {
+    private Flux<Try<Map<String, Object>>> queryBaseObjects(String type, int maxIdsPerQuery, List<String> ids, BatchLoaderEnvironment env) {
         return Flux.fromIterable(Lists.partition(ids, maxIdsPerQuery))
             .flatMapSequential(subList -> requestObjects(type, subList)
                 .doOnSubscribe(ignore -> log.info("Querying {}: {}", type, StringUtils.collectionToCommaDelimitedString(subList))));
     }
 
-    private Flux<Map<String, Object>> queryPlaylists(List<String> ids) {
+    private Flux<Map<String, Object>> queryPlaylists(List<String> ids, BatchLoaderEnvironment env) {
         return Flux.fromIterable(ids)
             .flatMapSequential(id -> requestObject(uriBuilder -> uriBuilder
                 .pathSegment("playlists", id)
@@ -67,7 +70,7 @@ public class BatchLoaders {
                 .doOnSubscribe(ignore -> log.info("Querying playlist: {}", id)));
     }
 
-    private Flux<Map<String, Object>> queryUsers(List<String> ids) {
+    private Flux<Map<String, Object>> queryUsers(List<String> ids, BatchLoaderEnvironment env) {
         return Flux.fromIterable(ids)
             .flatMapSequential(id -> requestObject(uriBuilder -> uriBuilder
                 .pathSegment("users", id)
