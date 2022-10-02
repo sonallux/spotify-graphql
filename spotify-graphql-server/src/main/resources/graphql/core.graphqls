@@ -76,6 +76,7 @@ type Image {
 type SearchItems {
   albums: AlbumsPaging
   artists: ArtistsPaging
+  audiobooks: AudiobooksPaging
   episodes: EpisodesPaging
   playlists: PlaylistsPaging
   shows: ShowsPaging

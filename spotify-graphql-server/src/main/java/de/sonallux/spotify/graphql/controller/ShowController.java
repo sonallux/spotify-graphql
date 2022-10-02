@@ -15,14 +15,14 @@ import java.util.Map;
 public class ShowController extends BaseController {
     @QueryMapping
     Mono<Map<String, Object>> show(@Nullable @Argument String id, @Nullable @Argument String uri,
-                                    DataLoader<String, Map<String, Object>> showLoader
+                                   DataLoader<String, Map<String, Object>> showLoader
     ) {
         return load(id, uri, "show", showLoader);
     }
 
     @QueryMapping
     Mono<List<Map<String, Object>>> shows(@Nullable @Argument List<String> ids, @Nullable @Argument List<String> uris,
-                                           DataLoader<String, Map<String, Object>> showLoader
+                                          DataLoader<String, Map<String, Object>> showLoader
     ) {
         return loadMany(ids, uris, "show", showLoader);
     }

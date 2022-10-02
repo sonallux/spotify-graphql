@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 abstract class BaseController {
 
     Mono<Map<String, Object>> load(@Nullable String id, @Nullable String uri, String type,
-                                             DataLoader<String, Map<String, Object>> dataloader) {
+                                   DataLoader<String, Map<String, Object>> dataloader) {
         return Mono.fromSupplier(() -> extractSpotifyId(id, uri, type))
             .flatMap(actualId -> Mono.fromFuture(dataloader.load(actualId)));
     }

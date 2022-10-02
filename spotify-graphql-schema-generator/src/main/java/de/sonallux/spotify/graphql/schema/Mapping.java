@@ -7,7 +7,9 @@ public sealed interface Mapping permits FieldMapping, TypeMapping, BaseTypeQuery
     enum Category {
         ALBUM,
         ARTIST,
+        AUDIOBOOK,
         BROWSE,
+        CHAPTER,
         CORE,
         EPISODE,
         LIBRARY,
