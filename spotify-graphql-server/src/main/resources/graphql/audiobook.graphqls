@@ -19,7 +19,12 @@ type Audiobook {
   "A list of the countries in which the audiobook can be played, identified by their [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) code."
   available_markets: [String]
   "The chapters of the audiobook."
-  chapters: ChaptersPaging
+  chapters(
+    "The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50."
+    limit: Int = 20, 
+    "The index of the first item to return. Default: 0 (the first item). Use with limit to get the next set of items."
+    offset: Int = 0
+  ): ChaptersPaging
   "The copyright statements of the audiobook."
   copyrights: [Copyright]
   "A description of the audiobook. HTML tags are stripped away from this field, use `html_description` field in case HTML tags are needed."
