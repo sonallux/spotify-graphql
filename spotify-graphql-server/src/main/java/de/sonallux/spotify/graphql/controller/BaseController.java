@@ -3,8 +3,10 @@ package de.sonallux.spotify.graphql.controller;
 import de.sonallux.spotify.graphql.util.SpotifyUtil;
 import org.dataloader.DataLoader;
 import org.springframework.lang.Nullable;
+import org.springframework.web.util.UriUtils;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -61,16 +63,17 @@ abstract class BaseController {
         if (arguments.isEmpty()) {
             return "";
         }
+
         return "?" + arguments.entrySet().stream()
-            .map(e -> e.getKey() + "=" + valueForQueryString(e.getValue()))
+            .map(e -> e.getKey() + "=" + convertToQueryParam(e.getValue()))
             .collect(Collectors.joining("&"));
     }
 
-    String valueForQueryString(Object object) {
+    private String convertToQueryParam(Object object) {
         if (object instanceof List<?> list) {
-            return list.stream().map(this::valueForQueryString).collect(Collectors.joining(","));
+            return list.stream().map(this::convertToQueryParam).collect(Collectors.joining(","));
         }
-        return object.toString();
+        return UriUtils.encodeQueryParam(object.toString(), StandardCharsets.UTF_8);
     }
 
     String extractSpotifyId(@Nullable String id, @Nullable String uri, String type) {
